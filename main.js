@@ -37,17 +37,18 @@ io.of('/txt').on('connection', function (socket) {
     socket.on("findNewStranger", function () {
         console.log("finding new stranger for " + clientIP);
 
-        var strangerSocket = TXTUSERS[Math.floor(Math.random() * TXTUSERS.length)];
-        while (strangerSocket === socket) {
-            strangerSocket = TXTUSERS[Math.floor(Math.random() * TXTUSERS.length)];
-        }
 //
 //            console.log("yo: " + socket.id);
 //            console.log("stranger: " + strangerSocket.id);
 
         if (getTotalUsers() < 2) {
-            socket.emit("sysMsg", {message: "Less than 2 users connected, wait until more users connect."});
-            console.log("warning: less than 2 users");
+            socket.emit("sysMsg", {message: "Less than 2 users connected, wait until more users connect.", cmd: "wait"});
+            console.log("warning: less than 2 users, client have to wait.");
+        } else {
+            var strangerSocket = TXTUSERS[Math.floor(Math.random() * TXTUSERS.length)];
+            while (strangerSocket === socket) {
+                strangerSocket = TXTUSERS[Math.floor(Math.random() * TXTUSERS.length)];
+            }
         }
 
 
