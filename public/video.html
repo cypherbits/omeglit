@@ -1,0 +1,80 @@
+<div style="position:fixed; height: 100%; padding-top:1em;" class="col-md-12">
+    <div id="header">
+        <div class="pull-left">
+        <h1><a href="index.html">Omeglo:</a> <small>Talk to strangers! (Beta)</small></h1>
+        </div>
+        
+         <div class="pull-right">
+                        <h2>1200+ online now</h2>
+                    </div>
+                    <div class="clearfix"></div>
+    </div>
+    <div id="chatArea" style="position: absolute; top:5em; left: .5em;right: .5em;bottom: 6em;">
+        <div class="col-md-3" style="border-right: solid 1px grey; height: 100%; background-color:whitesmoke;">
+            <div class="row">
+                <video id="remoteVideo" autoplay="autoplay"></video>
+            </div>
+            <div class="row">
+                <div>
+                    <video id="localVideo" autoplay="autoplay" muted=""></video>
+                </div>
+            </div>
+        </div>
+        <div id="txtChatLog" class="col-md-9">
+
+
+            <div class="item">
+                You're now chatting with a random stranger. Say hi!
+            </div>
+
+            <div class="item">
+                You both speak the same language. 
+            </div>
+
+            <div class="item">
+                You both like <i>youtube, video</i>. 
+            </div>
+
+            <div class="item">
+                You both are from the same country. 
+            </div>
+
+            <div class="item">
+                <span class="you">You: </span><span class="msg">ola </span>
+            </div>
+
+            <div class="item">
+                <span class="stranger">Stranger: </span><span class="msg">hola </span> 
+            </div>
+
+            <div class="item">
+                You have disconnected.
+            </div>
+
+            <div class="item">
+                You are looking for people who talk your language and wants to talk about: youtube, video.
+
+                <a href="#">Change preferences</a>
+            </div>
+
+            <div class="item">
+                <button class="btn btn-lg btn-primary">New chat</button> 
+            </div>
+
+        </div>
+    </div>
+    <div style="position: absolute; bottom: .5em;left: .5em;right: .5em;height: 5em;">
+        <div class="col-md-1">
+            <button class="btn btn-lg btn-primary" id="btnNewChat">New (esc)</button>
+        </div>
+
+        <div class="col-md-10">
+            <textarea id="txtNewMessage"></textarea>
+
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-lg btn-primary" id="btnSendMessage">Send</button>
+
+        </div>
+    </div>
+</div>
