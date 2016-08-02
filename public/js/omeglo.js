@@ -1,9 +1,21 @@
 'use strict';
 
+
+var socketNUsers = null;
+var socketControl = null;
+
 $(document).ready(function () {
 
     // Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+    socketNUsers = io.connect("http://localhost/nusers");
+    socketNUsers.on("nusers", function (data) {
+        $("#txtNUsers").html(data.nusers);
+        console.log(data.nusers);
+    });
+
+
 
     $("#btnCleanText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
@@ -90,20 +102,31 @@ $(document).ready(function () {
 
 
 function prepareTextChat() {
-    var localConnection = new RTCPeerConnection();
+//    var localConnection = new RTCPeerConnection();
+//
+//    sendChannel = localConnection.createDataChannel("sendChannel");
+//    sendChannel.onopen = handleSendChannelStatusChange;
+//    sendChannel.onclose = handleSendChannelStatusChange;
+//    localConnection.ondatachannel = receiveChannelCallback;
+//    
+//    localConnection.onicecandidate = onIceCandidate;
 
-    sendChannel = localConnection.createDataChannel("sendChannel");
-    sendChannel.onopen = handleSendChannelStatusChange;
-    sendChannel.onclose = handleSendChannelStatusChange;
-    localConnection.ondatachannel = receiveChannelCallback;
-    
-    localConnection.onicecandidate = onIceCandidate;
+//    
+//    localConnection.createOffer()
+//    .then(offer => localConnection.setLocalDescription(offer))
+//    .then(() => remoteConnection.setRemoteDescription(localConnection.localDescription))
+//    .then(() => remoteConnection.createAnswer())
+//    .then(answer => remoteConnection.setLocalDescription(answer))
+//    .then(() => localConnection.setRemoteDescription(remoteConnection.localDescription))
+//    .catch(handleCreateDescriptionError);
+
+    //https://developer.mozilla.org/es/docs/Web/API/WebRTC_API/Simple_RTCDataChannel_sample
 
 
-    var socket = io.connect('http://localhost');
-    socket.on('news', function (data) {
-        console.log(data);
-        socket.emit('my other event', {my: 'data'});
+    socketControl = io.connect('http://localhost/txt');
+    socketControl.emit('findnewstranger');
+    socketControl.on('newstrangerfound', function (data) {
+        socketControl.emit('my other event', {my: 'data'});
     });
 }
 
