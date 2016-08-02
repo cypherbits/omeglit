@@ -1,5 +1,6 @@
 'use strict';
 
+var URLConnection = "192.168.0.199";
 
 var socketNUsers = null;
 var socketControl = null;
@@ -9,7 +10,7 @@ $(document).ready(function () {
     // Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-    socketNUsers = io.connect("http://localhost/nusers");
+    socketNUsers = io.connect("http://" + URLConnection + "/nusers");
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
         console.log(data.nusers);
@@ -123,8 +124,14 @@ function prepareTextChat() {
     //https://developer.mozilla.org/es/docs/Web/API/WebRTC_API/Simple_RTCDataChannel_sample
 
 
-    socketControl = io.connect('http://localhost/txt');
-    socketControl.emit('findnewstranger');
+    socketControl = io.connect('http://' + URLConnection + '/txt');
+    socketControl.emit('findNewStranger');
+
+    socketControl.on("sysMsg", function (data) {
+        alert("Warning: " + data.message);
+        console.warn("Warning: " + data.message);
+    });
+
     socketControl.on('newstrangerfound', function (data) {
         socketControl.emit('my other event', {my: 'data'});
     });

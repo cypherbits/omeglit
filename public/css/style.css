@@ -17,9 +17,8 @@ noscript{
 }
 
 #header{
-    position: absolute;
-    z-index: 1;
-    top: 0em;
+    z-index: 10;
+    margin-top:-20px;
 }
 
 #chatArea{
