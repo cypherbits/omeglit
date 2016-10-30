@@ -7,71 +7,61 @@ var io = require("socket.io")(server);
 /** CONFIG */
 var PORT = 80;
 
+/** GLOBAL VARIABLES */
 
-/** Global variables*/
-var TXTUSERS = [];
-var VIDEOUSERS = [];
-var TXT18USERS = [];
-var VIDEO18USERS = [];
+var TXTWAITING = [];
 
 app.use(express.static('public'));
 
-var nusersnamespace = io.of('/nusers');
-nusersnamespace.on('connection', function (socket) {
+var ioNUsers = io.of('/nusers');
+ioNUsers.on('connection', function (socket) {
     socket.emit("nusers", {nusers: getTotalUsers()});
 });
 
-io.of('/txt').on('connection', function (socket) {
+var ioTXT = io.of('/txt');
+ioTXT.on('connection', function (socket) {
 
-    var clientIP = socket.request.connection.remoteAddress;
+    //var clientIP = socket.request.connection.remoteAddress;
     //var clientID = crypto.createHash('md5').update(clientIP).digest("hex");
 
-    if (TXTUSERS.indexOf(socket) === -1) {
-        TXTUSERS.push(socket);
-    }
+    console.log("Cliente con IP: " + socket.id + " se ha conectado. Ahora hay " + getTotalUsers() + ' usuarios conectados.');
 
-    console.log("Cliente con IP: " + clientIP + " se ha conectado. Ahora hay " + getTotalUsers() + ' usuarios conectados.');
+    ioNUsers.emit("nusers", {nusers: getTotalUsers()});
 
-    nusersnamespace.emit("nusers", {nusers: getTotalUsers()});
+    socket.on("findNewStranger", function (data) {
+        console.log("finding new stranger for " + socket.id);
 
-    socket.on("findNewStranger", function () {
-        console.log("finding new stranger for " + clientIP);
-
-//
-//            console.log("yo: " + socket.id);
-//            console.log("stranger: " + strangerSocket.id);
-
-        if (getTotalUsers() < 2) {
-            socket.emit("sysMsg", {message: "Less than 2 users connected, wait until more users connect.", cmd: "wait"});
-            console.log("warning: less than 2 users, client have to wait.");
+        if (TXTWAITING.length === 0) {
+            TXTWAITING.push([socket.id, data.description]);
+            console.log("hay " + TXTWAITING.length + " usuarios en espera.");
         } else {
-            var strangerSocket = TXTUSERS[Math.floor(Math.random() * TXTUSERS.length)];
-            while (strangerSocket === socket) {
-                strangerSocket = TXTUSERS[Math.floor(Math.random() * TXTUSERS.length)];
+            var stranger = TXTWAITING[Math.floor(Math.random() * TXTWAITING.length)];
+            while (stranger[0] === socket.id) {
+                stranger = TXTWAITING[Math.floor(Math.random() * TXTWAITING.length)];
             }
+            
+            socket.emit("gotRemoteDescription", {description: stranger[1]});
+            ioTXT.sockets[stranger[0]].emit("gotRemoteDescription", {description: data.description});
+            
+            TXTWAITING.splice(TXTWAITING.indexOf(stranger));
+            
+            console.log("ok");
         }
 
 
     });
 
-//  socket.emit('news', { hello: 'world' });
-//  socket.on('my other event', function (data) {
-//    console.log(data);
-//  });
-
     socket.on('disconnect', function () {
-        var i = TXTUSERS.indexOf(socket);
-        TXTUSERS.splice(i, 1);
-
-        console.log("desconectado " + clientIP);
+        TXTWAITING.splice(TXTWAITING.indexOf(socket.id));
+        console.log("desconectado " + socket.id + ' ahora hay ' + getTotalUsers() + ' usuarios');
     });
 });
 
 function getTotalUsers() {
-    return TXTUSERS.length + VIDEOUSERS.length + TXT18USERS.length + VIDEO18USERS.length;
+    return Object.keys(ioTXT.sockets).length;
 }
 
 
-server.listen(PORT, function () {
+server.listen(PORT, "0.0.0.0", function () {
     console.log("Servidor iniciado en el puerto " + PORT);
 });

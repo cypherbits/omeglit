@@ -1,6 +1,6 @@
 'use strict';
 
-var URLConnection = "192.168.0.199";
+var URLConnection = "192.168.0.197";
 
 var socketNUsers = null;
 var socketControl = null;
@@ -103,38 +103,84 @@ $(document).ready(function () {
 
 
 function prepareTextChat() {
-//    var localConnection = new RTCPeerConnection();
-//
-//    sendChannel = localConnection.createDataChannel("sendChannel");
-//    sendChannel.onopen = handleSendChannelStatusChange;
-//    sendChannel.onclose = handleSendChannelStatusChange;
-//    localConnection.ondatachannel = receiveChannelCallback;
-//    
-//    localConnection.onicecandidate = onIceCandidate;
-
-//    
-//    localConnection.createOffer()
-//    .then(offer => localConnection.setLocalDescription(offer))
-//    .then(() => remoteConnection.setRemoteDescription(localConnection.localDescription))
-//    .then(() => remoteConnection.createAnswer())
-//    .then(answer => remoteConnection.setLocalDescription(answer))
-//    .then(() => localConnection.setRemoteDescription(remoteConnection.localDescription))
-//    .catch(handleCreateDescriptionError);
-
-    //https://developer.mozilla.org/es/docs/Web/API/WebRTC_API/Simple_RTCDataChannel_sample
-
+    var localConnection = new RTCPeerConnection();
 
     socketControl = io.connect('http://' + URLConnection + '/txt');
-    socketControl.emit('findNewStranger');
 
-    socketControl.on("sysMsg", function (data) {
-        alert("Warning: " + data.message);
-        console.warn("Warning: " + data.message);
-    });
+    var sendChannel = localConnection.createDataChannel("sendDataChannel");
+    localConnection.onicecandidate = iceCallback1;
+    sendChannel.onopen = onSendChannelStateChange;
+    sendChannel.onclose = onSendChannelStateChange;
+   // localConnection.ondatachannel = receiveChannelCallback;
 
-    socketControl.on('newstrangerfound', function (data) {
-        socketControl.emit('my other event', {my: 'data'});
-    });
+    localConnection.createOffer().then(
+            gotDescription,
+            onCreateSessionDescriptionError
+            );
+
+    function onCreateSessionDescriptionError(error) {
+        console.error('Failed to create session description: ' + error.toString());
+    }
+
+
+    function gotDescription(desc) {
+        localConnection.setLocalDescription(desc);
+        console.error('Offer from localConnection \n' + desc.sdp);
+
+        socketControl.emit('findNewStranger', {description: desc});
+        
+        socketControl.on("gotRemoteDescription", function(data){
+            console.dir("desc: "+data.description);
+        });
+        
+
+        remoteConnection.setRemoteDescription(desc);
+        remoteConnection.createAnswer().then(
+                gotDescription2,
+                onCreateSessionDescriptionError
+                );
+    }
+
+    function gotDescription2(desc) {
+        remoteConnection.setLocalDescription(desc);
+        console.error('Answer from remoteConnection \n' + desc.sdp);
+        localConnection.setRemoteDescription(desc);
+    }
+
+    function iceCallback1(event) {
+        console.error('local ice callback');
+        if (event.candidate) {
+            remoteConnection.addIceCandidate(
+                    event.candidate
+                    ).then(
+                    onAddIceCandidateSuccess,
+                    onAddIceCandidateError
+                    );
+            console.error('Local ICE candidate: \n' + event.candidate.candidate);
+        }
+    }
+
+    function onSendChannelStateChange() {
+        var readyState = sendChannel.readyState;
+        console.error('Send channel state is: ' + readyState);
+        if (readyState === 'open') {
+            dataChannelSend.disabled = false;
+            dataChannelSend.focus();
+            sendButton.disabled = false;
+            closeButton.disabled = false;
+        } else {
+            dataChannelSend.disabled = true;
+            sendButton.disabled = true;
+            closeButton.disabled = true;
+        }
+    }
+
+
+
+
+
+   
+
 }
 
 
