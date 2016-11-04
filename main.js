@@ -4,62 +4,151 @@ var server = require("http").Server(app);
 var io = require("socket.io")(server);
 //var crypto = require('crypto');
 
+app.use(express.static('public'));
+
 /** CONFIG */
-var PORT = 80;
+var PORT = 8080;
 
 /** GLOBAL VARIABLES */
 
-var TXTWAITING = [];
+var lonelyClientTxt = {};
+var allClientsTxt = {};
 
-app.use(express.static('public'));
+var lonelyClientVideo = {};
+var allClientsVideo = {};
 
-var ioNUsers = io.of('/nusers');
-ioNUsers.on('connection', function (socket) {
-    socket.emit("nusers", {nusers: getTotalUsers()});
+var lonelyClientTxt18 = {};
+var allClientsTxt18 = {};
+
+var lonelyClientVideo18 = {};
+var allClientsVideo18 = {};
+
+
+function countAllUsers() {
+    return Object.keys(allClientsTxt).length + Object.keys(allClientsVideo).length + Object.keys(allClientsTxt18).length + Object.keys(allClientsVideo18).length;
+}
+
+function emitUserCount() {
+    io.emit("nusers", {nusers: countAllUsers()});
+}
+
+io.on('connection', function (socket) {
+    emitUserCount();
 });
 
 var ioTXT = io.of('/txt');
 ioTXT.on('connection', function (socket) {
 
-    //var clientIP = socket.request.connection.remoteAddress;
-    //var clientID = crypto.createHash('md5').update(clientIP).digest("hex");
+    // io.emit('nusers', countAllUsers());
 
-    console.log("Cliente con IP: " + socket.id + " se ha conectado. Ahora hay " + getTotalUsers() + ' usuarios conectados.');
-
-    ioNUsers.emit("nusers", {nusers: getTotalUsers()});
-
-    socket.on("findNewStranger", function (data) {
-        console.log("finding new stranger for " + socket.id);
-
-        if (TXTWAITING.length === 0) {
-            TXTWAITING.push([socket.id, data.description]);
-            console.log("hay " + TXTWAITING.length + " usuarios en espera.");
-        } else {
-            var stranger = TXTWAITING[Math.floor(Math.random() * TXTWAITING.length)];
-            while (stranger[0] === socket.id) {
-                stranger = TXTWAITING[Math.floor(Math.random() * TXTWAITING.length)];
-            }
-            
-            socket.emit("gotRemoteDescription", {description: stranger[1]});
-            ioTXT.sockets[stranger[0]].emit("gotRemoteDescription", {description: data.description});
-            
-            TXTWAITING.splice(TXTWAITING.indexOf(stranger));
-            
-            console.log("ok");
-        }
-
-
-    });
+    console.log(socket.id, ' just came to website');
 
     socket.on('disconnect', function () {
-        TXTWAITING.splice(TXTWAITING.indexOf(socket.id));
-        console.log("desconectado " + socket.id + ' ahora hay ' + getTotalUsers() + ' usuarios');
-    });
-});
+        if (allClientsTxt[socket.id]) {
+            if (lonelyClientTxt.id == socket.id) {
+                lonelyClientTxt = {};
+            }
+            if (allClientsTxt[allClientsTxt[socket.id].partner]) {
+                io.to(allClientsTxt[socket.id].partner).emit('aborted');
+            }
 
-function getTotalUsers() {
-    return Object.keys(ioTXT.sockets).length;
-}
+            delete allClientsTxt[socket.id];
+
+            emitUserCount();
+
+            console.log(socket.id, ' disconnected!');
+            console.log(countAllUsers() + ' users online');
+        } else {
+            console.log('A user that never registered left');
+        }
+
+    });
+
+    socket.on('delete', function () {
+        if (allClientsTxt[socket.id]) {
+            if (lonelyClientTxt.id == socket.id) {
+                lonelyClientTxt = {};
+            }
+            if (allClientsTxt[allClientsTxt[socket.id].partner]) {
+                io.to(allClientsTxt[socket.id].partner).emit('aborted');
+            }
+            delete allClientsTxt[socket.id];
+
+            emitUserCount();
+
+            console.log(socket.id, ' disconnected!');
+            console.log(countAllUsers() + ' users online');
+        } else {
+            console.log('A user that never registered left');
+        }
+    });
+
+    socket.on('newUser', function (data) {
+
+        allClientsTxt[socket.id] = socket;
+
+        console.log('New user looking for a partner: ', socket.id);
+
+        if (lonelyClientTxt.id) {
+            console.log(lonelyClientTxt.id, ' emparejado con ', socket.id);
+            socket.partner = lonelyClientTxt.id;
+            allClientsTxt[lonelyClientTxt.id].partner = socket.id;
+            allClientsTxt[socket.id].partner = lonelyClientTxt.id;
+
+            io.to(lonelyClientTxt.id).emit('match', {
+                id: socket.id
+            });
+            io.to(socket.id).emit('match', {
+                id: lonelyClientTxt.id
+            });
+
+            lonelyClientTxt = {};
+
+        } else {
+            console.log(socket.id, ' buscar partner.');
+            lonelyClientTxt.id = socket.id;
+        }
+
+        console.log(countAllUsers() + ' users online')
+        emitUserCount();
+
+    });
+
+    socket.on('newMessage', function (data) {
+        if (allClientsTxt[data.partner]) {
+
+            io.to(data.partner).emit('newMessage', {
+                partner: socket.id,
+                message: data.message
+            });
+            io.to(socket.id).emit('newMessage', {
+                partner: socket.id,
+                message: data.message
+            });
+            io.to(data.partner).emit('stopTyping', {
+                
+            });
+
+        } else {
+            io.to(socket.id).emit('aborted');
+        }
+    });
+
+    // when the client emits 'typing', we broadcast it to others
+    socket.on('typing', function (data) {
+        io.to(data.partner).emit('typing', {
+            
+        });
+    });
+
+    // when the client emits 'stop typing', we broadcast it to others
+    socket.on('stopTyping', function (data) {
+        io.to(data.partner).emit('stopTyping', {
+        });
+    });
+
+
+});
 
 
 server.listen(PORT, "0.0.0.0", function () {

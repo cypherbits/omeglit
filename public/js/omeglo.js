@@ -1,6 +1,6 @@
 'use strict';
 
-var URLConnection = "192.168.0.197";
+var URLConnection = "127.0.0.1:8080";
 
 var socketNUsers = null;
 var socketControl = null;
@@ -10,13 +10,11 @@ $(document).ready(function () {
     // Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-    socketNUsers = io.connect("http://" + URLConnection + "/nusers");
+    socketNUsers = io.connect("http://" + URLConnection);
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
         console.log(data.nusers);
     });
-
-
 
     $("#btnCleanText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
@@ -127,7 +125,7 @@ function prepareTextChat() {
         localConnection.setLocalDescription(desc);
         console.error('Offer from localConnection \n' + desc.sdp);
 
-        socketControl.emit('findNewStranger', {description: desc});
+        socketControl.emit('newUser', {description: desc});
         
         socketControl.on("gotRemoteDescription", function(data){
             console.dir("desc: "+data.description);
