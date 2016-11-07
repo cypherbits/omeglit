@@ -22,7 +22,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#btnCleanVideo").on("click", function () {
+    $("#btnCleanVideoAAA").on("click", function () {
         $("#pageContainer").load("video.html", function () {
 
             // Compatibility shim
