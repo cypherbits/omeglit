@@ -95,17 +95,25 @@ ioTXT.on('connection', function (socket) {
             allClientsTxt[lonelyClientTxt.id].partner = socket.id;
             allClientsTxt[socket.id].partner = lonelyClientTxt.id;
 
-            io.to(lonelyClientTxt.id).emit('match', {
-                id: socket.id
-            });
-            io.to(socket.id).emit('match', {
+//            io.to(lonelyClientTxt.id).emit('match', {
+//                id: socket.id
+//            });
+//            io.to(socket.id).emit('match', {
+//                id: lonelyClientTxt.id
+//            });
+
+            allClientsTxt[socket.id].emit('match', {
                 id: lonelyClientTxt.id
+            });
+
+            allClientsTxt[lonelyClientTxt.id].emit('match', {
+                id: socket.id
             });
 
             lonelyClientTxt = {};
 
         } else {
-            console.log(socket.id, ' buscar partner.');
+            console.log(socket.id, ' busca partner.');
             lonelyClientTxt.id = socket.id;
         }
 
@@ -119,7 +127,7 @@ ioTXT.on('connection', function (socket) {
 
         if (allClientsTxt[socket.id].partner) {
 
-            io.to(allClientsTxt[socket.id].partner).emit('newMessage', {
+            allClientsTxt[allClientsTxt[socket.id].partner].emit('newMessage', {
                 type: data.type,
                 msg: data.msg
             });

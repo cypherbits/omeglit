@@ -101,8 +101,8 @@ function prepareTextChat() {
 
     var localConnection = new RTCPeerConnection();
 
-    var sendChannel = localConnection.createDataChannel("sendDataChannel");
-    localConnection.onicecandidate = iceCallback;
+    var sendChannel = localConnection.createDataChannel("sendChannel");
+    localConnection.onicecandidate = onICECandidate;
     sendChannel.onopen = onSendChannelStateChange;
     sendChannel.onclose = onSendChannelStateChange;
     localConnection.ondatachannel = receiveChannelCallback;
@@ -112,6 +112,7 @@ function prepareTextChat() {
     socketControl.emit('newUser', {});
 
     socketControl.on("match", function (data) {
+        console.log("creating offer");
         localConnection.createOffer().then(
                 gotDescription,
                 onCreateSessionDescriptionError
@@ -126,13 +127,40 @@ function prepareTextChat() {
                         gotAnswer,
                         onCreateAnswerError
                         );
+                console.log("we got new remote offer: " + data.msg);
                 break;
             case "new-answer":
                 localConnection.setRemoteDescription(data.msg);
+                console.log("we got new remote answer: " + data.msg);
                 break;
-
+            case "new-ice":
+                localConnection.addIceCandidate(data.msg);
+                console.log("we got new remote ICE candidate: " + data.msg);
+                break;
         }
     });
+
+    function receiveChannelCallback(event) {
+        console.log("channel received");
+        
+        sendChannel = event.channel;
+
+        sendChannel.onopen = onSendChannelStateChange;
+        sendChannel.onclose = onSendChannelStateChange;
+        sendChannel.onmessage = handleReceiveMessage;
+    }
+
+    function handleReceiveMessage(event) {
+        $("#txtChatLog").append("<div class'item'>" + event.data + "</div>");
+    }
+
+    function onICECandidate(ice) {
+        console.log("sending new ICE candidate: " + ice);
+        socketControl.emit('newMessage', {
+            type: 'new-ice',
+            msg: ice
+        });
+    }
 
     function onCreateSessionDescriptionError(error) {
         console.error('Failed to create session description: ' + error.toString());
@@ -143,8 +171,8 @@ function prepareTextChat() {
     }
 
     function gotAnswer(data) {
+        console.log("sending answer: " + data);
         localConnection.setLocalDescription(data);
-
         socketControl.emit('newMessage', {
             type: 'new-answer',
             msg: data
@@ -153,7 +181,7 @@ function prepareTextChat() {
 
     function gotDescription(desc) {
         localConnection.setLocalDescription(desc);
-        console.error('Offer from localConnection \n' + desc.sdp);
+        console.error('sending offer ' + desc.sdp);
 
         socketControl.emit('newMessage', {
             type: 'new-offer',
@@ -161,37 +189,28 @@ function prepareTextChat() {
         });
     }
 
-    function iceCallback(event) {
-        console.error('local ice callback');
-        if (event.candidate) {
-            remoteConnection.addIceCandidate(
-                    event.candidate
-                    ).then(
-                    onAddIceCandidateSuccess,
-                    onAddIceCandidateError
-                    );
-            console.error('Local ICE candidate: \n' + event.candidate.candidate);
-        }
-    }
-
     function onSendChannelStateChange() {
         var readyState = sendChannel.readyState;
         console.error('Send channel state is: ' + readyState);
         if (readyState === 'open') {
-            dataChannelSend.disabled = false;
-            dataChannelSend.focus();
-            sendButton.disabled = false;
-            closeButton.disabled = false;
+            //habilitar botones para enviar
+            $("#txtChatLog").val(" ");
         } else {
-            dataChannelSend.disabled = true;
-            sendButton.disabled = true;
-            closeButton.disabled = true;
+            //deshabilitar botones para enviar
+            console.log("not data channel open");
         }
     }
 
+    $("#btnSendMessage").on("click", function () {
+        sendMessage();
+    });
 
+    function sendMessage() {
+        var msg = $("#txtNewMessage").val();
+        sendChannel.send(msg);
 
-
+        $("#txtNewMessage").val(" ");
+    }
 
 
 
