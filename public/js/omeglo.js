@@ -7,9 +7,6 @@ var socketControl = null;
 
 $(document).ready(function () {
 
-    // Compatibility shim
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
     socketNUsers = io.connect("http://" + URLConnection);
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
@@ -101,51 +98,70 @@ $(document).ready(function () {
 
 
 function prepareTextChat() {
+
     var localConnection = new RTCPeerConnection();
+
+    var sendChannel = localConnection.createDataChannel("sendDataChannel");
+    localConnection.onicecandidate = iceCallback;
+    sendChannel.onopen = onSendChannelStateChange;
+    sendChannel.onclose = onSendChannelStateChange;
+    localConnection.ondatachannel = receiveChannelCallback;
 
     socketControl = io.connect('http://' + URLConnection + '/txt');
 
-    var sendChannel = localConnection.createDataChannel("sendDataChannel");
-    localConnection.onicecandidate = iceCallback1;
-    sendChannel.onopen = onSendChannelStateChange;
-    sendChannel.onclose = onSendChannelStateChange;
-   // localConnection.ondatachannel = receiveChannelCallback;
+    socketControl.emit('newUser', {});
 
-    localConnection.createOffer().then(
-            gotDescription,
-            onCreateSessionDescriptionError
-            );
+    socketControl.on("match", function (data) {
+        localConnection.createOffer().then(
+                gotDescription,
+                onCreateSessionDescriptionError
+                );
+    });
+
+    socketControl.on("newMessage", function (data) {
+        switch (data.type) {
+            case "new-offer":
+                localConnection.setRemoteDescription(data.msg);
+                localConnection.createAnswer().then(
+                        gotAnswer,
+                        onCreateAnswerError
+                        );
+                break;
+            case "new-answer":
+                localConnection.setRemoteDescription(data.msg);
+                break;
+
+        }
+    });
 
     function onCreateSessionDescriptionError(error) {
         console.error('Failed to create session description: ' + error.toString());
     }
 
+    function onCreateAnswerError(error) {
+        console.error('Failed to create session answer: ' + error.toString());
+    }
+
+    function gotAnswer(data) {
+        localConnection.setLocalDescription(data);
+
+        socketControl.emit('newMessage', {
+            type: 'new-answer',
+            msg: data
+        });
+    }
 
     function gotDescription(desc) {
         localConnection.setLocalDescription(desc);
         console.error('Offer from localConnection \n' + desc.sdp);
 
-        socketControl.emit('newUser', {description: desc});
-        
-        socketControl.on("gotRemoteDescription", function(data){
-            console.dir("desc: "+data.description);
+        socketControl.emit('newMessage', {
+            type: 'new-offer',
+            msg: desc
         });
-        
-
-        remoteConnection.setRemoteDescription(desc);
-        remoteConnection.createAnswer().then(
-                gotDescription2,
-                onCreateSessionDescriptionError
-                );
     }
 
-    function gotDescription2(desc) {
-        remoteConnection.setLocalDescription(desc);
-        console.error('Answer from remoteConnection \n' + desc.sdp);
-        localConnection.setRemoteDescription(desc);
-    }
-
-    function iceCallback1(event) {
+    function iceCallback(event) {
         console.error('local ice callback');
         if (event.candidate) {
             remoteConnection.addIceCandidate(
@@ -177,7 +193,7 @@ function prepareTextChat() {
 
 
 
-   
+
 
 }
 
@@ -213,4 +229,17 @@ function step3(call, connection) {
     $('#their-id').text(call.peer);
     $('#step1, #step2').hide();
 
+}
+
+function trace(text) {
+    // This function is used for logging.
+    if (text[text.length - 1] === '\n') {
+        text = text.substring(0, text.length - 1);
+    }
+    if (window.performance) {
+        var now = (window.performance.now() / 1000).toFixed(3);
+        console.log(now + ': ' + text);
+    } else {
+        console.log(text);
+    }
 }

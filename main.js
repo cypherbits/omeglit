@@ -83,7 +83,7 @@ ioTXT.on('connection', function (socket) {
         }
     });
 
-    socket.on('newUser', function (data) {
+    socket.on('newUser', function () {
 
         allClientsTxt[socket.id] = socket;
 
@@ -114,39 +114,20 @@ ioTXT.on('connection', function (socket) {
 
     });
 
-    socket.on('newMessage', function (data) {
-        if (allClientsTxt[data.partner]) {
 
-            io.to(data.partner).emit('newMessage', {
-                partner: socket.id,
-                message: data.message
-            });
-            io.to(socket.id).emit('newMessage', {
-                partner: socket.id,
-                message: data.message
-            });
-            io.to(data.partner).emit('stopTyping', {
-                
+    socket.on('newMessage', function (data) {
+
+        if (allClientsTxt[socket.id].partner) {
+
+            io.to(allClientsTxt[socket.id].partner).emit('newMessage', {
+                type: data.type,
+                msg: data.msg
             });
 
         } else {
             io.to(socket.id).emit('aborted');
         }
     });
-
-    // when the client emits 'typing', we broadcast it to others
-    socket.on('typing', function (data) {
-        io.to(data.partner).emit('typing', {
-            
-        });
-    });
-
-    // when the client emits 'stop typing', we broadcast it to others
-    socket.on('stopTyping', function (data) {
-        io.to(data.partner).emit('stopTyping', {
-        });
-    });
-
 
 });
 
