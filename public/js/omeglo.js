@@ -101,11 +101,10 @@ function prepareTextChat() {
 
     var localConnection = new RTCPeerConnection();
 
-    var sendChannel = localConnection.createDataChannel("sendChannel");
     localConnection.onicecandidate = onICECandidate;
-    sendChannel.onopen = onSendChannelStateChange;
-    sendChannel.onclose = onSendChannelStateChange;
     localConnection.ondatachannel = receiveChannelCallback;
+
+    var sendChannel = null;
 
     socketControl = io.connect('http://' + URLConnection + '/txt');
 
@@ -115,6 +114,11 @@ function prepareTextChat() {
         console.log("creating offer");
 
         if (data.itsok) {
+            sendChannel = localConnection.createDataChannel("sendChannel");
+            sendChannel.onopen = onSendChannelStateChange;
+            sendChannel.onclose = onSendChannelStateChange;
+            sendChannel.onmessage = handleReceiveMessage;
+
             localConnection.createOffer().then(
                     gotDescription,
                     onCreateSessionDescriptionError
@@ -142,7 +146,10 @@ function prepareTextChat() {
                 console.debug("we got new remote answer: " + JSON.parse(data.msg));
                 break;
             case "new-ice":
-                localConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(data.msg)));
+                if (JSON.parse(data.msg) != null) {
+                    localConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(data.msg)));
+                }
+
                 console.debug("we got new remote ICE candidate: " + JSON.parse(data.msg));
                 break;
         }
@@ -159,6 +166,7 @@ function prepareTextChat() {
     }
 
     function handleReceiveMessage(event) {
+        console.log("new MESSAGE: " + event.data);
         $("#txtChatLog").html("");
         $("#txtChatLog").append("<div class'item'>" + event.data + "</div>");
     }
