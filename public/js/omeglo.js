@@ -113,36 +113,44 @@ function prepareTextChat() {
 
     socketControl.on("match", function (data) {
         console.log("creating offer");
-        localConnection.createOffer().then(
-                gotDescription,
-                onCreateSessionDescriptionError
-                );
+
+        if (data.itsok) {
+            localConnection.createOffer().then(
+                    gotDescription,
+                    onCreateSessionDescriptionError
+                    );
+        }
+
     });
 
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
             case "new-offer":
-                localConnection.setRemoteDescription(data.msg);
-                localConnection.createAnswer().then(
-                        gotAnswer,
-                        onCreateAnswerError
-                        );
-                console.log("we got new remote offer: " + data.msg);
+                localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)), function () {
+                    localConnection.createAnswer().then(
+                            gotAnswer,
+                            onCreateAnswerError
+                            );
+                }, function (e) {
+                    console.error("ERROR" + e);
+                });
+
+                console.debug("we got new remote offer: " + JSON.parse(data.msg));
                 break;
             case "new-answer":
-                localConnection.setRemoteDescription(data.msg);
-                console.log("we got new remote answer: " + data.msg);
+                localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)));
+                console.debug("we got new remote answer: " + JSON.parse(data.msg));
                 break;
             case "new-ice":
-                localConnection.addIceCandidate(data.msg);
-                console.log("we got new remote ICE candidate: " + data.msg);
+                localConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(data.msg)));
+                console.debug("we got new remote ICE candidate: " + JSON.parse(data.msg));
                 break;
         }
     });
 
     function receiveChannelCallback(event) {
         console.log("channel received");
-        
+
         sendChannel = event.channel;
 
         sendChannel.onopen = onSendChannelStateChange;
@@ -155,10 +163,10 @@ function prepareTextChat() {
     }
 
     function onICECandidate(ice) {
-        console.log("sending new ICE candidate: " + ice);
+        console.debug("sending new ICE candidate: " + ice);
         socketControl.emit('newMessage', {
             type: 'new-ice',
-            msg: ice
+            msg: JSON.stringify(ice)
         });
     }
 
@@ -171,21 +179,21 @@ function prepareTextChat() {
     }
 
     function gotAnswer(data) {
-        console.log("sending answer: " + data);
+        console.debug("sending answer: " + data);
         localConnection.setLocalDescription(data);
         socketControl.emit('newMessage', {
             type: 'new-answer',
-            msg: data
+            msg: JSON.stringify(data)
         });
     }
 
     function gotDescription(desc) {
         localConnection.setLocalDescription(desc);
-        console.error('sending offer ' + desc.sdp);
+        console.debug('sending offer ' + desc.sdp);
 
         socketControl.emit('newMessage', {
             type: 'new-offer',
-            msg: desc
+            msg: JSON.stringify(desc)
         });
     }
 

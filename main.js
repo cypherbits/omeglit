@@ -103,7 +103,8 @@ ioTXT.on('connection', function (socket) {
 //            });
 
             allClientsTxt[socket.id].emit('match', {
-                id: lonelyClientTxt.id
+                id: lonelyClientTxt.id,
+                itsok: true
             });
 
             allClientsTxt[lonelyClientTxt.id].emit('match', {
@@ -124,13 +125,12 @@ ioTXT.on('connection', function (socket) {
 
 
     socket.on('newMessage', function (data) {
+        
+        console.log(data);
 
         if (allClientsTxt[socket.id].partner) {
 
-            allClientsTxt[allClientsTxt[socket.id].partner].emit('newMessage', {
-                type: data.type,
-                msg: data.msg
-            });
+            allClientsTxt[allClientsTxt[socket.id].partner].emit('newMessage', data);
 
         } else {
             io.to(socket.id).emit('aborted');
