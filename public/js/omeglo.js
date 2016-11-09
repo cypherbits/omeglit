@@ -159,14 +159,15 @@ function prepareTextChat() {
     }
 
     function handleReceiveMessage(event) {
+        $("#txtChatLog").html("");
         $("#txtChatLog").append("<div class'item'>" + event.data + "</div>");
     }
 
     function onICECandidate(ice) {
-        console.debug("sending new ICE candidate: " + ice);
+        console.dir("sending new ICE candidate: " + ice.candidate);
         socketControl.emit('newMessage', {
             type: 'new-ice',
-            msg: JSON.stringify(ice)
+            msg: JSON.stringify(ice.candidate)
         });
     }
 
