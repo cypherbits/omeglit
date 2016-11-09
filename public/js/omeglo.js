@@ -97,7 +97,9 @@ $(document).ready(function () {
 });
 
 
-function prepareTextChat() {
+function prepareTextChat(is18) {
+    chatLog.clear();
+    chatLog.addSystemMessage("Looking for a partner...");
 
     var localConnection = new RTCPeerConnection();
 
@@ -106,12 +108,18 @@ function prepareTextChat() {
 
     var sendChannel = null;
 
-    socketControl = io.connect('http://' + URLConnection + '/txt');
+    if (is18) {
+        socketControl = io.connect('http://' + URLConnection + '/txt18');
+    } else {
+        socketControl = io.connect('http://' + URLConnection + '/txt');
+    }
+
 
     socketControl.emit('newUser', {});
 
     socketControl.on("match", function (data) {
         console.log("creating offer");
+        chatLog.addSystemMessage("Partner found, trying to connect...");
 
         if (data.itsok) {
             sendChannel = localConnection.createDataChannel("sendChannel");
@@ -167,8 +175,7 @@ function prepareTextChat() {
 
     function handleReceiveMessage(event) {
         console.log("new MESSAGE: " + event.data);
-        $("#txtChatLog").html("");
-        $("#txtChatLog").append("<div class'item'>" + event.data + "</div>");
+        chatLog.addStrangerMessage(event.data);
     }
 
     function onICECandidate(ice) {
@@ -211,7 +218,8 @@ function prepareTextChat() {
         console.error('Send channel state is: ' + readyState);
         if (readyState === 'open') {
             //habilitar botones para enviar
-            $("#txtChatLog").val(" ");
+            chatLog.clear();
+            chatLog.addSystemMessage("You're now chatting with a random stranger. Say hi!");
         } else {
             //deshabilitar botones para enviar
             console.log("not data channel open");
@@ -226,10 +234,10 @@ function prepareTextChat() {
         var msg = $("#txtNewMessage").val();
         sendChannel.send(msg);
 
-        $("#txtNewMessage").val(" ");
+        $("#txtNewMessage").val("");
+
+        chatLog.addMeMessage(msg);
     }
-
-
 
 }
 
@@ -278,4 +286,26 @@ function trace(text) {
     } else {
         console.log(text);
     }
+
 }
+
+var chatLog = {
+    clear: function () {
+        $("#txtChatLog").html("");
+    },
+    addSystemMessage: function (data) {
+        $("#txtChatLog").append('<div class="item">' + data + '</div>');
+    },
+    addStrangerMessage: function (data) {
+        var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+            return '&#' + i.charCodeAt(0) + ';';
+        });
+        $("#txtChatLog").append('<div class="item"><span class="stranger">Stranger: </span><span class="msg">' + encodedStr + '</span></div>');
+    },
+    addMeMessage: function (data) {
+         var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+            return '&#' + i.charCodeAt(0) + ';';
+        });
+        $("#txtChatLog").append('<div class="item"><span class="you">You: </span><span class="msg">' + encodedStr + '</span></div>');
+    }
+};
