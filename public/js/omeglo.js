@@ -15,79 +15,15 @@ $(document).ready(function () {
 
     $("#btnCleanText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
-            prepareTextChat();
+            prepareTextChat(false);
         });
     });
 
-    $("#btnCleanVideoAAA").on("click", function () {
+    $("#btnCleanVideo").on("click", function () {
+
         $("#pageContainer").load("video.html", function () {
 
-            // Compatibility shim
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-// PeerJS object
-            var peer = new Peer({key: 'canbethisbetheapikey', debug: 3, host: "vps.avanix.es", port: 8080, secure: true});
-
-            peer.on('open', function () {
-                $('#txtChatLog').text(peer.id);
-            });
-
-// Receiving a call
-            peer.on('call', function (call) {
-                // Answer the call automatically (instead of prompting user) for demo purposes
-                call.answer(window.localStream);
-                step3(call);
-            });
-            peer.on('error', function (err) {
-                alert(err.message);
-                // Return to step 2 if error occurs
-
-            });
-
-            peer.on('connection', function (conn) {
-                alert(conn);
-                console.dir(conn);
-                conn.on('open', function () {
-                    // Receive messages
-                    conn.on('data', function (data) {
-                        alert("data1: " + data);
-                        console.log('Received ', data);
-                    });
-
-                    // Send messages
-                    conn.send('Hello!');
-                });
-            });
-
-            $('#btnNewChat').click(function () {
-                // Initiate a call!
-                var call = peer.call($('#txtNewMessage').val(), window.localStream);
-                var connection = peer.connect($('#txtNewMessage').val());
-
-//                connection.on('open', function () {
-//                    // Receive messages
-//                    connection.on('data', function (data) {
-//                        alert("data2: " + data);
-//                        console.log('Received ', data);
-//                    });
-//
-//                    // Send messages
-//                    connection.send('Hello!');
-//                });
-
-                step3(call, connection);
-            });
-
-            $('#btnSendMessage').click(function () {
-                window.existingCall.close();
-
-            });
-
-            // Retry if getUserMedia fails
-            $('#step1-retry').click(function () {
-                $('#step1-error').hide();
-                step1();
-            });
 
             prepareCamera();
 
@@ -102,10 +38,35 @@ function prepareTextChat(is18) {
     $("#btnNewChat").prop("disabled", true);
     $("#btnSendMessage").prop("disabled", true);
 
+    $('#txtNewMessage').unbind().keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == "13") {
+            $('#btnSendMessage').click();
+        }
+    });
+
     chatLog.clear();
     chatLog.addSystemMessage("Looking for a partner...");
 
-    var localConnection = new RTCPeerConnection();
+    var localConnection = new RTCPeerConnection({
+        'iceServers': [
+            {
+                'url': 'stun:stun.l.google.com:19302'
+            },
+            {
+                'url': 'stun:stun1.l.google.com:19302'
+            },
+            {
+                'url': 'stun:stun2.l.google.com:19302'
+            },
+            {
+                'url': 'stun:stun01.sipphone.com'
+            },
+            {
+                'url': 'stun:stun.ekiga.net'
+            }
+        ]
+    });
 
     localConnection.onicecandidate = onICECandidate;
     localConnection.ondatachannel = receiveChannelCallback;
@@ -289,30 +250,9 @@ function prepareCamera() {
         $('#localVideo').prop('src', URL.createObjectURL(stream));
 
         window.localStream = stream;
-    }, function () {
-        $('#step1-error').show();
+    }, function (error) {
+        console.error(error);
     });
-}
-
-
-function step3(call, connection) {
-    // Hang up on an existing call if present
-    if (window.existingCall) {
-        window.existingCall.close();
-    }
-
-    // Wait for stream on the call, then set peer video display
-    call.on('stream', function (stream) {
-        $('#remoteVideo').prop('src', URL.createObjectURL(stream));
-    });
-
-
-
-    // UI stuff
-    window.existingCall = call;
-    $('#their-id').text(call.peer);
-    $('#step1, #step2').hide();
-
 }
 
 function trace(text) {
@@ -335,17 +275,25 @@ var chatLog = {
     },
     addSystemMessage: function (data) {
         $("#txtChatLog").append('<div class="item">' + data + '</div>');
+        updateScroll();
     },
     addStrangerMessage: function (data) {
         var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
             return '&#' + i.charCodeAt(0) + ';';
         });
         $("#txtChatLog").append('<div class="item"><span class="stranger">Stranger: </span><span class="msg">' + encodedStr + '</span></div>');
+        updateScroll();
     },
     addMeMessage: function (data) {
         var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
             return '&#' + i.charCodeAt(0) + ';';
         });
         $("#txtChatLog").append('<div class="item"><span class="you">You: </span><span class="msg">' + encodedStr + '</span></div>');
+        updateScroll();
     }
 };
+
+function updateScroll() {
+    var element = document.getElementById("txtChatLog");
+    element.scrollTop = element.scrollHeight;
+}
