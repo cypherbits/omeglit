@@ -98,6 +98,10 @@ $(document).ready(function () {
 
 
 function prepareTextChat(is18) {
+
+    $("#btnNewChat").prop("disabled", true);
+    $("#btnSendMessage").prop("disabled", true);
+
     chatLog.clear();
     chatLog.addSystemMessage("Looking for a partner...");
 
@@ -220,13 +224,31 @@ function prepareTextChat(is18) {
             //habilitar botones para enviar
             chatLog.clear();
             chatLog.addSystemMessage("You're now chatting with a random stranger. Say hi!");
+
+            $("#btnNewChat").html("Disconnect");
+            $("#btnNewChat").unbind().on("click", function () {
+                chatLog.addSystemMessage("You have disconnected.");
+                disconnect();
+            });
+            $("#btnNewChat").removeProp("disabled");
+            $("#btnSendMessage").removeProp("disabled");
         } else {
             //deshabilitar botones para enviar
             console.log("not data channel open");
+            chatLog.addSystemMessage("Stranger have disconnected.");
+
+//            $("#btnNewChat").html("New chat");
+//            $("#btnNewChat").unbind().on("click", function () {
+//                prepareTextChat(false);
+//            });
+//            $("#btnSendMessage").prop("disabled", true);
+
+            disconnect();
+
         }
     }
 
-    $("#btnSendMessage").on("click", function () {
+    $("#btnSendMessage").unbind().on("click", function () {
         sendMessage();
     });
 
@@ -237,6 +259,24 @@ function prepareTextChat(is18) {
         $("#txtNewMessage").val("");
 
         chatLog.addMeMessage(msg);
+    }
+
+    function disconnect() {
+
+        sendChannel.close();
+
+        localConnection.close();
+
+        sendChannel = null;
+        localConnection = null;
+
+        socketControl.close();
+
+        $("#btnNewChat").html("New chat");
+        $("#btnNewChat").unbind().on("click", function () {
+            prepareTextChat(false);
+        });
+        $("#btnSendMessage").prop("disabled", true);
     }
 
 }
@@ -303,7 +343,7 @@ var chatLog = {
         $("#txtChatLog").append('<div class="item"><span class="stranger">Stranger: </span><span class="msg">' + encodedStr + '</span></div>');
     },
     addMeMessage: function (data) {
-         var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+        var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
             return '&#' + i.charCodeAt(0) + ';';
         });
         $("#txtChatLog").append('<div class="item"><span class="you">You: </span><span class="msg">' + encodedStr + '</span></div>');
