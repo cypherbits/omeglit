@@ -1,16 +1,15 @@
-<div style="position:fixed; height: 100%; padding-top:1em;" class="col-md-12">
+<div style="position:fixed; height: 100%; padding-top:1em;" class="col-md-12 col-xs-12">
     <div id="header">
         <div class="pull-left">
-        <h1><a href="index.html">Omeglit:</a> <small>Talk to strangers! (Beta)</small></h1>
+            <h1><a href="index.html">Omeglit:</a> <small>Talk to strangers! (Beta)</small></h1>
         </div>
-        
-         <div class="pull-right">
-                        <h2><span id="txtNUsers">x</span>+ online now</h2>
-                    </div>
-                    <div class="clearfix"></div>
+        <div class="pull-right">
+            <h2><span id="txtNUsers">x</span>+ online now</h2>
+        </div>
+        <div class="clearfix"></div>
     </div>
     <div id="chatArea" style="position: absolute; top:5em; left: .5em;right: .5em;bottom: 6em;">
-        <div class="col-md-3" style="border-right: solid 1px grey; height: 100%; background-color:whitesmoke;">
+        <div class="col-md-3 col-sm-4" style="border-right: solid 1px grey; height: 100%; background-color:whitesmoke;">
             <div class="row">
                 <video id="remoteVideo" autoplay="autoplay"></video>
             </div>
@@ -20,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div id="txtChatLog" class="col-md-9">
+        <div id="txtChatLog" class="col-md-9 col-sm-8">
 
 
             <div class="item">
@@ -64,17 +63,14 @@
         </div>
     </div>
     <div style="position: absolute; bottom: .5em;left: .5em;right: .5em;height: 5em;">
-        <div class="col-md-1">
-            <button class="btn btn-lg btn-primary" id="btnNewChat">New (esc)</button>
-        </div>
-
-        <div class="col-md-10">
-            <textarea id="txtNewMessage"></textarea>
-
-        </div>
-        <div class="col-md-1">
-            <button class="btn btn-lg btn-primary" id="btnSendMessage">Send</button>
-
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button class="btn btn-lg btn-primary btn-block" id="btnNewChat" disabled="">New chat</button>
+            </span>
+            <textarea class="form-control" placeholder="Say Hi!" id="txtNewMessage" style="height: 5.2em; border-radius: 4px; box-shadow: none !important;" disabled=""></textarea>
+            <span class="input-group-btn">
+                <button class="btn btn-primary btn-block" id="btnSendMessage" disabled="">Send</button>
+            </span>
         </div>
     </div>
 </div>

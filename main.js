@@ -45,169 +45,88 @@ io.on('connection', function (socket) {
     emitUserCount();
 });
 
-var ioTXT = io.of('/txt');
-ioTXT.on('connection', function (socket) {
+newOmeglit("/txt", lonelyClientTxt, allClientsTxt);
+newOmeglit("/video", lonelyClientVideo, allClientsVideo);
+newOmeglit("/txt18", lonelyClientTxt18, allClientsTxt18);
+newOmeglit("/video18", lonelyClientVideo18, allClientsVideo18);
 
-    console.log(socket.id, ' just came to website');
 
-    socket.on('disconnect', function () {
-        if (allClientsTxt[socket.id]) {
-            if (lonelyClientTxt.id == socket.id) {
-                lonelyClientTxt = {};
+function newOmeglit(url, lonely, allClients) {
+    var ioPath = io.of(url);
+    ioPath.on('connection', function (socket) {
+
+        console.log(socket.id, ' just came to website');
+
+        socket.on('disconnect', function () {
+            if (allClients[socket.id]) {
+                if (lonely.id == socket.id) {
+                    lonely = {};
+                }
+                if (allClients[allClients[socket.id].partner]) {
+                    io.to(allClients[socket.id].partner).emit('aborted');
+                }
+
+                delete allClients[socket.id];
+
+                emitUserCount();
+
+                console.log(socket.id, ' disconnected!');
+                console.log(countAllUsers() + ' users online');
+            } else {
+                console.log('A user that never registered left');
             }
-            if (allClientsTxt[allClientsTxt[socket.id].partner]) {
-                io.to(allClientsTxt[socket.id].partner).emit('aborted');
+
+        });
+
+        socket.on('newUser', function () {
+
+            allClients[socket.id] = socket;
+
+            console.log('New user looking for a partner: ', socket.id);
+
+            if (lonely.id) {
+                console.log(lonely.id, ' emparejado con ', socket.id);
+                socket.partner = lonely.id;
+                allClients[lonely.id].partner = socket.id;
+                allClients[socket.id].partner = lonely.id;
+
+                allClients[socket.id].emit('match', {
+                    id: lonely.id,
+                    itsok: true
+                });
+
+                allClients[lonely.id].emit('match', {
+                    id: socket.id
+                });
+
+                lonely = {};
+
+            } else {
+                console.log(socket.id, ' busca partner.');
+                lonely.id = socket.id;
             }
 
-            delete allClientsTxt[socket.id];
-
+            console.log(countAllUsers() + ' users online')
             emitUserCount();
 
-            console.log(socket.id, ' disconnected!');
-            console.log(countAllUsers() + ' users online');
-        } else {
-            console.log('A user that never registered left');
-        }
-
-    });
-
-    socket.on('newUser', function () {
-
-        allClientsTxt[socket.id] = socket;
-
-        console.log('New user looking for a partner: ', socket.id);
-
-        if (lonelyClientTxt.id) {
-            console.log(lonelyClientTxt.id, ' emparejado con ', socket.id);
-            socket.partner = lonelyClientTxt.id;
-            allClientsTxt[lonelyClientTxt.id].partner = socket.id;
-            allClientsTxt[socket.id].partner = lonelyClientTxt.id;
-
-//            io.to(lonelyClientTxt.id).emit('match', {
-//                id: socket.id
-//            });
-//            io.to(socket.id).emit('match', {
-//                id: lonelyClientTxt.id
-//            });
-
-            allClientsTxt[socket.id].emit('match', {
-                id: lonelyClientTxt.id,
-                itsok: true
-            });
-
-            allClientsTxt[lonelyClientTxt.id].emit('match', {
-                id: socket.id
-            });
-
-            lonelyClientTxt = {};
-
-        } else {
-            console.log(socket.id, ' busca partner.');
-            lonelyClientTxt.id = socket.id;
-        }
-
-        console.log(countAllUsers() + ' users online')
-        emitUserCount();
-
-    });
+        });
 
 
-    socket.on('newMessage', function (data) {
+        socket.on('newMessage', function (data) {
 
-       // console.log(data);
+            // console.log(data);
 
-        if (allClientsTxt[socket.id].partner) {
+            if (allClients[socket.id].partner) {
 
-            allClientsTxt[allClientsTxt[socket.id].partner].emit('newMessage', data);
+                allClients[allClients[socket.id].partner].emit('newMessage', data);
 
-        } else {
-            io.to(socket.id).emit('aborted');
-        }
-    });
-
-});
-
-var ioVIDEO = io.of('/video');
-ioVIDEO.on('connection', function (socket) {
-
-    console.log(socket.id, ' just came to website');
-
-    socket.on('disconnect', function () {
-        if (allClientsVideo[socket.id]) {
-            if (lonelyClientVideo.id == socket.id) {
-                lonelyClientVideo = {};
+            } else {
+                io.to(socket.id).emit('aborted');
             }
-            if (allClientsVideo[allClientsVideo[socket.id].partner]) {
-                io.to(allClientsVideo[socket.id].partner).emit('aborted');
-            }
-
-            delete allClientsVideo[socket.id];
-
-            emitUserCount();
-
-            console.log(socket.id, ' disconnected!');
-            console.log(countAllUsers() + ' users online');
-        } else {
-            console.log('A user that never registered left');
-        }
+        });
 
     });
-
-    socket.on('newUser', function () {
-
-        allClientsVideo[socket.id] = socket;
-
-        console.log('New user looking for a partner: ', socket.id);
-
-        if (lonelyClientVideo.id) {
-            console.log(lonelyClientVideo.id, ' emparejado con ', socket.id);
-            socket.partner = lonelyClientVideo.id;
-            allClientsVideo[lonelyClientVideo.id].partner = socket.id;
-            allClientsVideo[socket.id].partner = lonelyClientVideo.id;
-
-//            io.to(lonelyClientTxt.id).emit('match', {
-//                id: socket.id
-//            });
-//            io.to(socket.id).emit('match', {
-//                id: lonelyClientTxt.id
-//            });
-
-            allClientsVideo[socket.id].emit('match', {
-                id: lonelyClientVideo.id,
-                itsok: true
-            });
-
-            allClientsVideo[lonelyClientVideo.id].emit('match', {
-                id: socket.id
-            });
-
-            lonelyClientVideo = {};
-
-        } else {
-            console.log(socket.id, ' busca partner.');
-            lonelyClientVideo.id = socket.id;
-        }
-
-        console.log(countAllUsers() + ' users online')
-        emitUserCount();
-
-    });
-
-
-    socket.on('newMessage', function (data) {
-
-        //console.log(data);
-
-        if (allClientsVideo[socket.id].partner) {
-
-            allClientsVideo[allClientsVideo[socket.id].partner].emit('newMessage', data);
-
-        } else {
-            io.to(socket.id).emit('aborted');
-        }
-    });
-
-});
+}
 
 
 server.listen(PORT, "0.0.0.0", function () {
