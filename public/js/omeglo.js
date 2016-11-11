@@ -4,6 +4,7 @@ var URLConnection = "127.0.0.1:8080";
 
 var socketNUsers = null;
 var socketControl = null;
+var localStream = null;
 
 var iceServers = {
     'iceServers': [
@@ -71,14 +72,14 @@ $(document).ready(function () {
 
 function prepareVideoChat(is18) {
 
-    var videoTracks = localStream.getVideoTracks();
-    var audioTracks = localStream.getAudioTracks();
-    if (videoTracks.length > 0) {
-        trace('Using video device: ' + videoTracks[0].label);
-    }
-    if (audioTracks.length > 0) {
-        trace('Using audio device: ' + audioTracks[0].label);
-    }
+//    var videoTracks = localStream.getVideoTracks();
+//    var audioTracks = localStream.getAudioTracks();
+//    if (videoTracks.length > 0) {
+//        trace('Using video device: ' + videoTracks[0].label);
+//    }
+//    if (audioTracks.length > 0) {
+//        trace('Using audio device: ' + audioTracks[0].label);
+//    }
 
     $("#btnNewChat").prop("disabled", true);
     $("#btnSendMessage").prop("disabled", true);
@@ -120,6 +121,8 @@ function prepareVideoChat(is18) {
             sendChannel.onopen = onSendChannelStateChange;
             sendChannel.onclose = onSendChannelStateChange;
             sendChannel.onmessage = handleReceiveMessage;
+
+            localConnection.addStream(localStream);
 
             localConnection.createOffer({
                 audio: true,
@@ -171,6 +174,7 @@ function prepareVideoChat(is18) {
     function receiveStreamCallback(e) {
         //remoteVideo.srcObject = e.stream;
         $('#remoteVideo').prop('src', URL.createObjectURL(e.stream));
+        console.log("remote video stream add");
     }
 
     function receiveChannelCallback(event) {
@@ -225,7 +229,7 @@ function prepareVideoChat(is18) {
 
     function onSendChannelStateChange() {
         var readyState = sendChannel.readyState;
-        console.error('Send channel state is: ' + readyState);
+        console.log('Send channel state is: ' + readyState);
         if (readyState === 'open') {
             //habilitar botones para enviar
             chatLog.clear();
@@ -243,12 +247,6 @@ function prepareVideoChat(is18) {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-
-//            $("#btnNewChat").html("New chat");
-//            $("#btnNewChat").unbind().on("click", function () {
-//                prepareTextChat(false);
-//            });
-//            $("#btnSendMessage").prop("disabled", true);
 
             disconnect();
 
@@ -432,7 +430,7 @@ function prepareTextChat(is18) {
 
     function onSendChannelStateChange() {
         var readyState = sendChannel.readyState;
-        console.error('Send channel state is: ' + readyState);
+        console.log('Send channel state is: ' + readyState);
         if (readyState === 'open') {
             //habilitar botones para enviar
             chatLog.clear();
@@ -450,12 +448,6 @@ function prepareTextChat(is18) {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-
-//            $("#btnNewChat").html("New chat");
-//            $("#btnNewChat").unbind().on("click", function () {
-//                prepareTextChat(false);
-//            });
-//            $("#btnSendMessage").prop("disabled", true);
 
             disconnect();
 
@@ -507,7 +499,7 @@ function prepareCamera() {
         // Set your video displays
         $('#localVideo').prop('src', URL.createObjectURL(stream));
 
-        window.localStream = stream;
+        localStream = stream;
     }, function (error) {
         console.error(error);
     });
