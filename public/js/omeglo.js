@@ -54,7 +54,7 @@ $(document).ready(function () {
         $("#pageContainer").load("video.html", function () {
 
             prepareCamera();
-
+            prepareVideoChat(false);
         });
     });
 
@@ -63,13 +63,22 @@ $(document).ready(function () {
         $("#pageContainer").load("video.html", function () {
 
             prepareCamera();
-
+            prepareVideoChat(true);
         });
     });
 });
 
 
 function prepareVideoChat(is18) {
+
+    var videoTracks = localStream.getVideoTracks();
+    var audioTracks = localStream.getAudioTracks();
+    if (videoTracks.length > 0) {
+        trace('Using video device: ' + videoTracks[0].label);
+    }
+    if (audioTracks.length > 0) {
+        trace('Using audio device: ' + audioTracks[0].label);
+    }
 
     $("#btnNewChat").prop("disabled", true);
     $("#btnSendMessage").prop("disabled", true);
@@ -89,13 +98,14 @@ function prepareVideoChat(is18) {
 
     localConnection.onicecandidate = onICECandidate;
     localConnection.ondatachannel = receiveChannelCallback;
+    localConnection.onaddstream = receiveStreamCallback;
 
     var sendChannel = null;
 
     if (is18) {
-        socketControl = io.connect('http://' + URLConnection + '/txt18');
+        socketControl = io.connect('http://' + URLConnection + '/video18');
     } else {
-        socketControl = io.connect('http://' + URLConnection + '/txt');
+        socketControl = io.connect('http://' + URLConnection + '/video');
     }
 
 
@@ -111,7 +121,10 @@ function prepareVideoChat(is18) {
             sendChannel.onclose = onSendChannelStateChange;
             sendChannel.onmessage = handleReceiveMessage;
 
-            localConnection.createOffer().then(
+            localConnection.createOffer({
+                audio: true,
+                video: true
+            }).then(
                     gotDescription,
                     onCreateSessionDescriptionError
                     );
@@ -154,6 +167,11 @@ function prepareVideoChat(is18) {
                 break;
         }
     });
+
+    function receiveStreamCallback(e) {
+        //remoteVideo.srcObject = e.stream;
+        $('#remoteVideo').prop('src', URL.createObjectURL(e.stream));
+    }
 
     function receiveChannelCallback(event) {
         console.log("channel received");
