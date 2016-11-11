@@ -52,17 +52,14 @@
         </div>
     </div>
     <div style="position: absolute; bottom: .5em;left: .5em;right: .5em;height: 5em;">
-        <div class="col-md-1 col-xs-1 nomargin nopadding">
-            <button class="btn btn-lg btn-primary btn-block" id="btnNewChat" disabled="">New chat</button>
-        </div>
-
-        <div class="col-md-10 col-xs-10 nomargin nopadding">
-            <textarea id="txtNewMessage"></textarea>
-
-        </div>
-        <div class="col-md-1 col-xs-1 nomargin nopadding">
-            <button class="btn btn-lg btn-primary btn-block" id="btnSendMessage" disabled="">Send</button>
-
-        </div>
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button class="btn btn-lg btn-primary btn-block" id="btnNewChat" disabled="">New chat</button>
+            </span>
+            <textarea class="form-control" placeholder="Say Hi!" id="txtNewMessage" style="height: 5.2em; border-radius: 4px; box-shadow: none !important;" disabled=""></textarea>
+            <span class="input-group-btn">
+                <button class="btn btn-primary btn-block" id="btnSendMessage" disabled="">Send</button>
+            </span>
+        </div><!-- /input-group -->
     </div>
 </div>

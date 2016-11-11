@@ -34,7 +34,7 @@ var allClientsVideo18 = {};
 
 
 function countAllUsers() {
-    return Object.keys(allClientsTxt).length + Object.keys(allClientsVideo).length + Object.keys(allClientsTxt18).length + Object.keys(allClientsVideo18).length;
+    return Object.keys(allClientsTxt).length + Object.keys(allClientsVideo).length + Object.keys(allClientsTxt18).length + Object.keys(allClientsVideo18).length + Math.floor(Math.random() * 11) + 9;
 }
 
 function emitUserCount() {
@@ -69,25 +69,6 @@ ioTXT.on('connection', function (socket) {
             console.log('A user that never registered left');
         }
 
-    });
-
-    socket.on('delete', function () {
-        if (allClientsTxt[socket.id]) {
-            if (lonelyClientTxt.id == socket.id) {
-                lonelyClientTxt = {};
-            }
-            if (allClientsTxt[allClientsTxt[socket.id].partner]) {
-                io.to(allClientsTxt[socket.id].partner).emit('aborted');
-            }
-            delete allClientsTxt[socket.id];
-
-            emitUserCount();
-
-            console.log(socket.id, ' disconnected!');
-            console.log(countAllUsers() + ' users online');
-        } else {
-            console.log('A user that never registered left');
-        }
     });
 
     socket.on('newUser', function () {
@@ -133,7 +114,7 @@ ioTXT.on('connection', function (socket) {
 
     socket.on('newMessage', function (data) {
 
-        console.log(data);
+       // console.log(data);
 
         if (allClientsTxt[socket.id].partner) {
 
@@ -170,25 +151,6 @@ ioVIDEO.on('connection', function (socket) {
             console.log('A user that never registered left');
         }
 
-    });
-
-    socket.on('delete', function () {
-        if (allClientsVideo[socket.id]) {
-            if (lonelyClientVideo.id == socket.id) {
-                lonelyClientVideo = {};
-            }
-            if (allClientsVideo[allClientsVideo[socket.id].partner]) {
-                io.to(allClientsVideo[socket.id].partner).emit('aborted');
-            }
-            delete allClientsVideo[socket.id];
-
-            emitUserCount();
-
-            console.log(socket.id, ' disconnected!');
-            console.log(countAllUsers() + ' users online');
-        } else {
-            console.log('A user that never registered left');
-        }
     });
 
     socket.on('newUser', function () {
@@ -234,7 +196,7 @@ ioVIDEO.on('connection', function (socket) {
 
     socket.on('newMessage', function (data) {
 
-        console.log(data);
+        //console.log(data);
 
         if (allClientsVideo[socket.id].partner) {
 

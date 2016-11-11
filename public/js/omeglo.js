@@ -11,6 +11,11 @@ $(document).ready(function () {
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
         console.log(data.nusers);
+        
+        $("#btnCleanText").removeProp("disabled");
+        //$("#btnCleanVideo").removeProp("disabled");
+        //$("#btnNomoText").removeProp("disabled");
+        //$("#btnNomoVideo").removeProp("disabled");
     });
 
     $("#btnCleanText").on("click", function () {
@@ -97,6 +102,14 @@ function prepareTextChat(is18) {
                     onCreateSessionDescriptionError
                     );
         }
+
+    });
+
+
+    socketControl.on("aborted", function (data) {
+
+        chatLog.addSystemMessage("Stranger have disconnected.");
+        disconnect();
 
     });
 
@@ -193,6 +206,7 @@ function prepareTextChat(is18) {
             });
             $("#btnNewChat").removeProp("disabled");
             $("#btnSendMessage").removeProp("disabled");
+            $("#txtNewMessage").removeProp("disabled");
         } else {
             //deshabilitar botones para enviar
             console.log("not data channel open");
@@ -238,6 +252,7 @@ function prepareTextChat(is18) {
             prepareTextChat(false);
         });
         $("#btnSendMessage").prop("disabled", true);
+        $("#txtNewMessage").prop("disabled", true);
     }
 
 }
