@@ -153,7 +153,7 @@ function prepareTextChat(is18) {
     }
 
     function handleReceiveMessage(event) {
-        console.log("new MESSAGE: " + event.data);
+        //console.log("new MESSAGE: " + event.data);
         chatLog.addStrangerMessage(event.data);
     }
 
@@ -231,8 +231,8 @@ function prepareTextChat(is18) {
     function sendMessage() {
         var msg = $("#txtNewMessage").val();
 
-        if (trim(msg) == "") {
-            sendChannel.send(msg);
+        if (msg.trim() != "") {
+            sendChannel.send(msg.trim());
 
             $("#txtNewMessage").val("");
 
