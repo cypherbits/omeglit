@@ -11,7 +11,7 @@ $(document).ready(function () {
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
         console.log(data.nusers);
-        
+
         $("#btnCleanText").removeProp("disabled");
         //$("#btnCleanVideo").removeProp("disabled");
         //$("#btnNomoText").removeProp("disabled");
@@ -47,6 +47,7 @@ function prepareTextChat(is18) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if (keycode == "13") {
             $('#btnSendMessage').click();
+            return false;
         }
     });
 
@@ -229,11 +230,15 @@ function prepareTextChat(is18) {
 
     function sendMessage() {
         var msg = $("#txtNewMessage").val();
-        sendChannel.send(msg);
 
-        $("#txtNewMessage").val("");
+        if (trim(msg) == "") {
+            sendChannel.send(msg);
 
-        chatLog.addMeMessage(msg);
+            $("#txtNewMessage").val("");
+
+            chatLog.addMeMessage(msg);
+        }
+
     }
 
     function disconnect() {

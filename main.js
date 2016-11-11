@@ -34,7 +34,7 @@ var allClientsVideo18 = {};
 
 
 function countAllUsers() {
-    return Object.keys(allClientsTxt).length + Object.keys(allClientsVideo).length + Object.keys(allClientsTxt18).length + Object.keys(allClientsVideo18).length + Math.floor(Math.random() * 11) + 9;
+    return Object.keys(allClientsTxt).length + Object.keys(allClientsVideo).length + Object.keys(allClientsTxt18).length + Object.keys(allClientsVideo18).length;
 }
 
 function emitUserCount() {
