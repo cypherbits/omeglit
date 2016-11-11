@@ -1,6 +1,7 @@
 'use strict';
 
 var URLConnection = "127.0.0.1:8080";
+var URLProtocol = "http://";
 
 var socketNUsers = null;
 var socketControl = null;
@@ -28,7 +29,7 @@ var iceServers = {
 
 $(document).ready(function () {
 
-    socketNUsers = io.connect("http://" + URLConnection);
+    socketNUsers = io.connect(URLProtocol + URLConnection);
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
         console.log(data.nusers);
@@ -54,8 +55,8 @@ $(document).ready(function () {
     $("#btnCleanVideo").on("click", function () {
         $("#pageContainer").load("video.html", function () {
 
-            prepareCamera();
-            prepareVideoChat(false);
+            prepareCamera(false);
+            //prepareVideoChat(false);
         });
     });
 
@@ -63,8 +64,8 @@ $(document).ready(function () {
     $("#btnNomoVideo").on("click", function () {
         $("#pageContainer").load("video.html", function () {
 
-            prepareCamera();
-            prepareVideoChat(true);
+            prepareCamera(true);
+            //prepareVideoChat(true);
         });
     });
 });
@@ -104,9 +105,9 @@ function prepareVideoChat(is18) {
     var sendChannel = null;
 
     if (is18) {
-        socketControl = io.connect('http://' + URLConnection + '/video18');
+        socketControl = io.connect(URLProtocol + URLConnection + '/video18');
     } else {
-        socketControl = io.connect('http://' + URLConnection + '/video');
+        socketControl = io.connect(URLProtocol + URLConnection + '/video');
     }
 
 
@@ -146,6 +147,9 @@ function prepareVideoChat(is18) {
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
             case "new-offer":
+                
+                localConnection.addStream(localStream);
+                
                 localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)), function () {
                     localConnection.createAnswer().then(
                             gotAnswer,
@@ -316,9 +320,9 @@ function prepareTextChat(is18) {
     var sendChannel = null;
 
     if (is18) {
-        socketControl = io.connect('http://' + URLConnection + '/txt18');
+        socketControl = io.connect(URLProtocol + URLConnection + '/txt18');
     } else {
-        socketControl = io.connect('http://' + URLConnection + '/txt');
+        socketControl = io.connect(URLProtocol + URLConnection + '/txt');
     }
 
 
@@ -493,13 +497,17 @@ function prepareTextChat(is18) {
 }
 
 
-function prepareCamera() {
+function prepareCamera(is18) {
+    chatLog.clear();
     // Get audio/video stream
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
         // Set your video displays
         $('#localVideo').prop('src', URL.createObjectURL(stream));
 
         localStream = stream;
+
+        prepareVideoChat(is18);
+
     }, function (error) {
         console.error(error);
     });
