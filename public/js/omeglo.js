@@ -147,9 +147,9 @@ function prepareVideoChat(is18) {
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
             case "new-offer":
-                
+
                 localConnection.addStream(localStream);
-                
+
                 localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)), function () {
                     localConnection.createAnswer().then(
                             gotAnswer,
@@ -297,6 +297,12 @@ function prepareVideoChat(is18) {
 
 
 function prepareTextChat(is18) {
+
+    if (is18) {
+        $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
+        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
+        $("body").addClass("adult-text");
+    }
 
     $("#btnNewChat").prop("disabled", true);
     $("#btnSendMessage").prop("disabled", true);
@@ -498,7 +504,16 @@ function prepareTextChat(is18) {
 
 
 function prepareCamera(is18) {
+
+    if (is18) {
+        $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
+        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
+        $("body").addClass("adult-text");
+    }
+
     chatLog.clear();
+    chatLog.addSystemMessage("Enable access to your webcam");
+
     // Get audio/video stream
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
         // Set your video displays
@@ -510,6 +525,8 @@ function prepareCamera(is18) {
 
     }, function (error) {
         console.error(error);
+        alert("Your webcam is disabled or your browser does not support this feature.");
+        window.location = "./";
     });
 }
 

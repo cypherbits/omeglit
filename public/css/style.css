@@ -69,3 +69,12 @@ noscript{
 .nomargin{
     margin:0px;
 }
+
+.adult-text h2, .adult-text h1 a{
+    color:#c71c22;
+}
+
+.btn-adult{
+    background-color: #c71c22 !important;
+    color:#FFF !important;
+}
