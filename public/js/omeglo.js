@@ -68,11 +68,11 @@ $(document).ready(function () {
             //prepareVideoChat(true);
         });
     });
-    
-    $("#btnHover").on("click", function(){
+
+    $("#btnHover").on("click", function () {
         $("#divHover").hide();
     });
-    
+
 });
 
 
@@ -510,6 +510,22 @@ function prepareTextChat(is18) {
 
 function prepareCamera(is18) {
 
+    $(window).resize(function () {
+        resizeCamera();
+    });
+    
+    function resizeCamera() {
+        if (isBreakpoint("xs")) {
+            $("#divOrigVideo2").addClass("mobile");
+            $("#leftColumn").addClass("mobile");
+        } else {
+            $("#divOrigVideo2").removeClass("mobile");
+            $("#leftColumn").removeClass("mobile");
+        }
+    }
+
+    resizeCamera();
+
     if (is18) {
         $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
         $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
@@ -576,4 +592,8 @@ var chatLog = {
 function updateScroll() {
     var element = document.getElementById("txtChatLog");
     element.scrollTop = element.scrollHeight;
+}
+
+function isBreakpoint(alias) {
+    return $('.device-' + alias).is(':visible');
 }
