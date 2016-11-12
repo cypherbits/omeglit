@@ -74,21 +74,32 @@
                                                     </div>
                                                 </div>-->
                         <div class="col-md-12" style="margin-top:1.2em;">
-                            <h3>Start chatting</h3>
+                            <h3 class="nomargin">Start chatting</h3>
                             <hr>
                         </div>
 
-                        <div class="col-md-6 col-sm-6">
+                        <div class="col-md-6 col-sm-6 text-center">
                             <h4>Default version (13+)</h4>
                             <button id="btnCleanText" value="Text" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-font"></span> Text</button>
                             <button id="btnCleanVideo" value="Video" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-facetime-video"></span> Video</button>
                         </div>
                         <div style="height: 2em;" class="visible-xs"></div>
-                        <div class="col-md-6 col-sm-6">
+                        <div class="col-md-6 col-sm-6 text-center">
                             <h4 style="color:#c71c22;">Adult version (18+)</h4>
                             <button id="btnNomoText" value="Text" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-font"></span> Text</button>
                             <button id="btnNomoVideo" value="Video" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-facetime-video"></span> Video</button>
                             <p><br><span class="label label-danger">Warning</span> This section can contain explicit sexual behavior</p>
+                            
+<!--                            <div style="background-color:#FFF; filter:blur(1); position:absolute; top:0px; width: 100%; height: 100%;">  
+                            </div>-->
+                            <div id="divHover">
+                                <br>
+                                <p>
+                                    This section can contain sexual behaviour inappropiate for minors.
+                                </p>
+                                <button type="button" id="btnHover" class="btn btn-default">I am over 18 years old.</button>
+                            </div>
+                            
                         </div>
 
                     </div>
@@ -150,6 +161,8 @@
         <noscript>
             Our website need Javascript enabled, sorry.
         </noscript>
+        
+        <div id="testXS" class="visible-xs hidden-sm hidden-md hidden-lg hidden-print"></div>
 
         <script src="js/jquery-1.12.3.min.js" type="text/javascript"></script>
         <script src="js/bootstrap.min.js" type="text/javascript"></script>

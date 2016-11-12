@@ -68,6 +68,11 @@ $(document).ready(function () {
             //prepareVideoChat(true);
         });
     });
+    
+    $("#btnHover").on("click", function(){
+        $("#divHover").hide();
+    });
+    
 });
 
 
