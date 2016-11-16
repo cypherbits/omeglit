@@ -96,5 +96,10 @@ noscript{
 }
 
 #divOrigVideo1, #divOrigVideo2{
-    max-height: 40%;
+    
+}
+
+#divInput{
+    position: absolute; bottom: .5em;left: .5em;right: .5em;height: 5em;
+    background-color:whitesmoke;
 }

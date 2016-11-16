@@ -184,6 +184,8 @@ function prepareVideoChat(is18) {
         //remoteVideo.srcObject = e.stream;
         $('#remoteVideo').prop('src', URL.createObjectURL(e.stream));
         console.log("remote video stream add");
+
+        resizeVideos();
     }
 
     function receiveChannelCallback(event) {
@@ -513,7 +515,7 @@ function prepareCamera(is18) {
     $(window).resize(function () {
         resizeCamera();
     });
-    
+
     function resizeCamera() {
         if (isBreakpoint("xs")) {
             $("#divOrigVideo2").addClass("mobile");
@@ -598,6 +600,18 @@ function isBreakpoint(alias) {
     return $('.device-' + alias).is(':visible');
 }
 
-$(window).resize(function(){
+$(window).resize(function () {
     updateScroll();
+    resizeVideos();
 });
+
+function resizeVideos() {
+    if ($("#remoteVideo").width() * 2 > $("#leftColumn").height() && !isBreakpoint("xs")) {
+        $("#remoteVideo").height($("#leftColumn").height() / 2);
+        $("#localVideo").height($("#leftColumn").height() / 2);
+    } else {
+        $("#remoteVideo").height($("#remoteVideo").width());
+        $("#localVideo").height($("#localVideo").width());
+    }
+
+}
