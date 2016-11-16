@@ -597,3 +597,7 @@ function updateScroll() {
 function isBreakpoint(alias) {
     return $('.device-' + alias).is(':visible');
 }
+
+$(window).resize(function(){
+    updateScroll();
+});

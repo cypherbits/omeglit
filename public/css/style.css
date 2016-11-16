@@ -94,3 +94,7 @@ noscript{
 #leftColumn.mobile{
     height: auto !important;
 }
+
+#divOrigVideo1, #divOrigVideo2{
+    max-height: 40%;
+}
