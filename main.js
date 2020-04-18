@@ -56,7 +56,7 @@ function newOmeglit(url, lonely, allClients) {
     var ioPath = io.of(url);
     ioPath.on('connection', function (socket) {
 
-        console.log(socket.id, ' just came to website');
+        //console.log(socket.id, ' just came to website');
 
         socket.on('disconnect', function () {
             if (allClients[socket.id]) {
@@ -71,10 +71,10 @@ function newOmeglit(url, lonely, allClients) {
 
                 emitUserCount();
 
-                console.log(socket.id, ' disconnected!');
-                console.log(countAllUsers() + ' users online');
+                //console.log(socket.id, ' disconnected!');
+                //console.log(countAllUsers() + ' users online');
             } else {
-                console.log('A user that never registered left');
+                //console.log('A user that never registered left');
             }
 
         });
@@ -83,10 +83,10 @@ function newOmeglit(url, lonely, allClients) {
 
             allClients[socket.id] = socket;
 
-            console.log('New user looking for a partner: ', socket.id);
+            //console.log('New user looking for a partner: ', socket.id);
 
             if (lonely.id) {
-                console.log(lonely.id, ' emparejado con ', socket.id);
+                //console.log(lonely.id, ' emparejado con ', socket.id);
                 socket.partner = lonely.id;
                 allClients[lonely.id].partner = socket.id;
                 allClients[socket.id].partner = lonely.id;
@@ -103,11 +103,11 @@ function newOmeglit(url, lonely, allClients) {
                 lonely = {};
 
             } else {
-                console.log(socket.id, ' busca partner.');
+                //console.log(socket.id, ' busca partner.');
                 lonely.id = socket.id;
             }
 
-            console.log(countAllUsers() + ' users online')
+            //console.log(countAllUsers() + ' users online')
             emitUserCount();
 
         });
