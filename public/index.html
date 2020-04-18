@@ -1,183 +1,177 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Omeglit: Talk to strangers and meet new friends (Beta) (Omegle and Chatroulette alternative)</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Omeglit: talk and meet stranger and new people. Safer Omegle and Chatroulette alternative. Chat aleatorio. Habla con extraños y haz nuevos amigos. Alternativa a Omegle y Chatroulette. Más seguro.">
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-        <link href="css/style.css" rel="stylesheet" type="text/css"/>
-    </head>
-    <body>
-        <noscript>
-        <h2>This site needs Javascript enabled.</h2>
-        </noscript>
-        <div id="pageContainer">
-            <div class="container">
-                <div>
-                    <div class="pull-left">
-                        <h1>Omeglit: <small>Talk to strangers! (Beta)</small></h1>
-                    </div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Omeglit: Talk to strangers and meet new friends (Beta) (Omegle and Chatroulette alternative)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Omeglit: talk and meet stranger and new people. Safer Omegle and Chatroulette alternative. Chat aleatorio. Habla con extraños y haz nuevos amigos. Alternativa a Omegle y Chatroulette. Más seguro.">
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<noscript>
+    <h2>This site needs Javascript enabled.</h2>
+</noscript>
+<div id="pageContainer">
+    <div class="container">
+        <div>
+            <div class="pull-left">
+                <h1>Omeglit: <small>Talk to strangers! (Beta)</small></h1>
+            </div>
 
-                    <div class="pull-right">
-                        <h2><span id="txtNUsers">x</span>+ online now</h2>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Welcome to Omeglit!</h3>
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            Omeglit is a great way to meet new friends all over the world. When you use Omeglit, we pick someone else at random and let you talk one-on-one. 
-                            To help you stay safe we use HTTPS, chats are anonymous, we do not store text or video and the data sent to your partner is encrypted because we use WebRTC. <br>
-                            Users can report bad behaviours and the system will send us a screenshot of whats happening (future, WIP). 
-                        </p>
-<!--                        <p>
-                            If you prefer, you can add your interests, and Omeglit will look for someone who's into some of the same things as you instead 
-                            of someone completely random.
-                        </p>-->
-                        <p>
-                            By using Omeglit, you accept the terms at the bottom. You must be 18+ or 13+ with parental permission.
-                        </p>
-                        <p>
-                            Because we use direct WebRTC encrypted connection between browsers, we do not moderate live video or text chats. Users can and should report bad behaviour.
-                        </p>
-                         <p>
-                            Remember: recording strangers without permission is not only immoral but can be illegal in your country. We will provide a way to track recordings in the future.
-                        </p>
-                        <p>
-                            Flash player not needed! Works on tablets and phones too!!
-                            <img style="width:6em;" src="img/noflash.jpg">
-                        </p>
-                    </div>
-                </div>
+            <div class="pull-right">
+                <h2><span id="txtNUsers">x</span>+ online now</h2>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Welcome to Omeglit!</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    Omeglit is a great way to meet new friends all over the world. When you use Omeglit, we pick someone else at random and let you talk one-on-one.
+                    To help you stay safe we use HTTPS, chats are anonymous, we do not store text or video and the data sent to your partner is encrypted because we use WebRTC. <br>
+                    Users can report bad behaviours and the system will send us a screenshot of whats happening (future, WIP).
+                </p>
+                <!--                        <p>
+                                            If you prefer, you can add your interests, and Omeglit will look for someone who's into some of the same things as you instead
+                                            of someone completely random.
+                                        </p>-->
+                <p>
+                    By using Omeglit, you accept the terms at the bottom. You must be 18+ or 13+ with parental permission.
+                </p>
+                <p>
+                    Because we use direct WebRTC encrypted connection between browsers, we do not moderate live video or text chats. Users can and should report bad behaviour.
+                </p>
+                <p>
+                    Remember: recording strangers without permission is not only immoral but can be illegal in your country. We will provide a way to track recordings in the future.
+                </p>
+                <p>
+                    Flash player not needed! Works on tablets and phones too!!
+                    <img style="width:6em;" src="img/noflash.jpg">
+                </p>
+            </div>
+        </div>
 
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <!--                                                <div class="col-md-12">
-                                                                            <label>What do you wanna talk about?</label>
-                                                                            <input type="text" id="txtInterests" class="form-control" placeholder="youtube, video, college" />
-                                                                        </div>
-                                                                        <div class="col-md-12" style="margin-top:1.2em;">
-                                                                            <label>Search people by</label>
-                                                                            <div class="btn-group btn-group-justified">
-                                                                                <a href="#" class="btn btn-default active">My language (english)</a>
-                                                                                <a href="#" class="btn btn-default">Other language</a>
-                                                                                <a href="#" class="btn btn-default">My country (UK)</a>
-                                                                                <a href="#" class="btn btn-default">Other country</a>
-                                                                            </div>
-                                                                        </div>-->
-                        <div class="col-md-12">
-                            <h3>Start chatting</h3>
-                            <hr>
-                        </div>
-
-                        <div class="col-md-6 col-sm-6 text-center">
-                            <h4>Default version (13+)</h4>
-                            <button id="btnCleanText" value="Text" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-font"></span> Text</button>
-                            <button id="btnCleanVideo" value="Video" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-facetime-video"></span> Video</button>
-                        </div>
-                        <div style="height: 2em;" class="visible-xs"></div>
-                        <div class="col-md-6 col-sm-6 text-center">
-                            <h4 style="color:#c71c22;">Adult version (18+)</h4>
-                            <button id="btnNomoText" value="Text" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-font"></span> Text</button>
-                            <button id="btnNomoVideo" value="Video" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-facetime-video"></span> Video</button>
-                            <p><br><span class="label label-danger">Warning</span> This section can contain explicit sexual behavior</p>
-                            
-                            <div id="divHover">
-                                <br>
-                                <p>
-                                    This section can contain sexual behaviour inappropiate for minors.
-                                </p>
-                                <button type="button" id="btnHover" class="btn btn-default">I am over 18 years old.</button>
-                            </div>
-                            
-                        </div>
-
-                    </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <!--                                                <div class="col-md-12">
+                                                                    <label>What do you wanna talk about?</label>
+                                                                    <input type="text" id="txtInterests" class="form-control" placeholder="youtube, video, college" />
+                                                                </div>
+                                                                <div class="col-md-12" style="margin-top:1.2em;">
+                                                                    <label>Search people by</label>
+                                                                    <div class="btn-group btn-group-justified">
+                                                                        <a href="#" class="btn btn-default active">My language (english)</a>
+                                                                        <a href="#" class="btn btn-default">Other language</a>
+                                                                        <a href="#" class="btn btn-default">My country (UK)</a>
+                                                                        <a href="#" class="btn btn-default">Other country</a>
+                                                                    </div>
+                                                                </div>-->
+                <div class="col-md-12">
+                    <h3>Start chatting</h3>
+                    <hr>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                        <!-- omeglit_inicio2 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-5722182132199960"
-                             data-ad-slot="1195969179"
-                             data-ad-format="auto"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
-                    </div>
+                <div class="col-md-6 col-sm-6 text-center">
+                    <h4>Default version (13+)</h4>
+                    <button id="btnCleanText" value="Text" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-font"></span> Text</button>
+                    <button id="btnCleanVideo" value="Video" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-facetime-video"></span> Video</button>
                 </div>
+                <div style="height: 2em;" class="visible-xs"></div>
+                <div class="col-md-6 col-sm-6 text-center">
+                    <h4 style="color:#c71c22;">Adult version (18+)</h4>
+                    <button id="btnNomoText" value="Text" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-font"></span> Text</button>
+                    <button id="btnNomoVideo" value="Video" class="btn btn-default btn-lg" disabled=""><span class="glyphicon glyphicon-facetime-video"></span> Video</button>
+                    <p><br><span class="label label-danger">Warning</span> This section can contain explicit sexual behavior</p>
 
+                    <div id="divHover">
+                        <br>
+                        <p>
+                            This section can contain sexual behaviour inappropiate for minors.
+                        </p>
+                        <button type="button" id="btnHover" class="btn btn-default">I am over 18 years old.</button>
+                    </div>
 
-                <!--                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">More information about this service</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        We use WebRTC so all video data and chat data is encrypted and doesnt even reach our servers. This makes this service more secure and private, but more hard to 
-                                        to monitor unappropiated behavior... we have a system for reporting etc...
-                                    </div>
-                                </div>-->
-
+                </div>
 
             </div>
         </div>
 
-        <style>
-            #sBaldOCJgnck, noscript {
-                display: none;
-                margin-bottom: 30px;
-                padding: 20px 10px;
-                background: #FFF;
-                text-align: center;
-                font-weight: bold;
-                color: #D30000;
-                position: fixed;
-                top:0px;
-                left:0px;
-                height:100%;
-                width:100%;
-            }
-        </style>
-
-        <div id="sBaldOCJgnck">
-            Our website is made possible by displaying online advertisements to our visitors.<br>
-            Please consider supporting us by disabling your ad blocker.<br>
-            We promess there won't be intrusive ads.
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- omeglit_inicio2 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-5722182132199960"
+                     data-ad-slot="1195969179"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
         </div>
-        
-        <noscript>
-            Our website need Javascript enabled, sorry.
-        </noscript>
 
-        <script src="js/jquery-1.12.3.min.js" type="text/javascript"></script>
-        <script src="js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="js/ie10hack.js" type="text/javascript"></script>
-        <script src="js/tagsmap-bootstrap.js" type="text/javascript"></script>
-        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-        <script src="js/adapter.js" type="text/javascript"></script>
-        <script src="js/omeglo.js" type="text/javascript"></script>
-        <script src="js/ads.js" type="text/javascript"></script>
-        <script type="text/javascript">
 
-                            if (!document.getElementById('xVXsLjWmblne')) {
-                                document.getElementById('sBaldOCJgnck').style.display = 'block';
-                            }
+        <!--                <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">More information about this service</h3>
+                            </div>
+                            <div class="panel-body">
+                                We use WebRTC so all video data and chat data is encrypted and doesnt even reach our servers. This makes this service more secure and private, but more hard to
+                                to monitor unappropiated behavior... we have a system for reporting etc...
+                            </div>
+                        </div>-->
 
-        </script>
-    </body>
+
+    </div>
+</div>
+
+<style>
+    #sBaldOCJgnck, noscript {
+        display: none;
+        margin-bottom: 30px;
+        padding: 20px 10px;
+        background: #FFF;
+        text-align: center;
+        font-weight: bold;
+        color: #D30000;
+        position: fixed;
+        top:0px;
+        left:0px;
+        height:100%;
+        width:100%;
+    }
+</style>
+
+<div id="sBaldOCJgnck">
+    Our website is made possible by displaying online advertisements to our visitors.<br>
+    Please consider supporting us by disabling your ad blocker.<br>
+    We promess there won't be intrusive ads.
+</div>
+
+<noscript>
+    Our website needs Javascript enabled, sorry.
+</noscript>
+
+<script src="js/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/tagsmap-bootstrap.js" type="text/javascript"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="js/adapter.js" type="text/javascript"></script>
+<script src="js/omeglo.js" type="text/javascript"></script>
+<script src="js/ads.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    if (!document.getElementById('xVXsLjWmblne')) {
+        document.getElementById('sBaldOCJgnck').style.display = 'block';
+    }
+
+</script>
+</body>
 </html>
