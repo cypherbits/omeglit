@@ -1,11 +1,13 @@
 'use strict';
 
-var URLConnection = "127.0.0.1:8080";
-var URLProtocol = "http://";
+var URLConnection = "omeglit.com:8080";
+var URLProtocol = "https://";
 
 var socketNUsers = null;
 var socketControl = null;
 var localStream = null;
+
+var page = null;
 
 var iceServers = {
     'iceServers': [
@@ -17,12 +19,6 @@ var iceServers = {
         },
         {
             'url': 'stun:stun2.l.google.com:19302'
-        },
-        {
-            'url': 'stun:stun01.sipphone.com'
-        },
-        {
-            'url': 'stun:stun.ekiga.net'
         }
     ]
 };
@@ -32,7 +28,7 @@ $(document).ready(function () {
     socketNUsers = io.connect(URLProtocol + URLConnection);
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
-        console.log(data.nusers);
+        //console.log(data.nusers);
 
         $("#btnCleanText").removeProp("disabled");
         $("#btnCleanVideo").removeProp("disabled");
@@ -77,6 +73,8 @@ $(document).ready(function () {
 
 
 function prepareVideoChat(is18) {
+
+    page = "video";
 
 //    var videoTracks = localStream.getVideoTracks();
 //    var audioTracks = localStream.getAudioTracks();
@@ -304,6 +302,8 @@ function prepareVideoChat(is18) {
 
 
 function prepareTextChat(is18) {
+
+    page = "text";
 
     if (is18) {
         $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
@@ -601,8 +601,12 @@ function isBreakpoint(alias) {
 }
 
 $(window).resize(function () {
-    updateScroll();
-    resizeVideos();
+    if (page === "video"){
+        resizeVideos();
+    }
+    if (page === "videos" || page === "text"){
+        updateScroll();
+    }
 });
 
 function resizeVideos() {
