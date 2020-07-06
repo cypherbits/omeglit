@@ -180,8 +180,11 @@ function prepareVideoChat(is18) {
 
     function receiveStreamCallback(e) {
         //remoteVideo.srcObject = e.stream;
-        $('#remoteVideo').prop('src', URL.createObjectURL(e.stream));
-        console.log("remote video stream add");
+        //$('#remoteVideo').prop('src', URL.createObjectURL(e.stream));
+        var remoteVideo = document.querySelector('#remoteVideo');
+        remoteVideo.srcObject = e.stream;
+
+        //console.log("remote video stream add");
 
         resizeVideos();
     }
@@ -540,7 +543,10 @@ function prepareCamera(is18) {
     // Get audio/video stream
     navigator.getUserMedia({audio: true, video: true}, function (stream) {
         // Set your video displays
-        $('#localVideo').prop('src', URL.createObjectURL(stream));
+
+        //$('#localVideo').prop('src', window.URL.createObjectURL(stream));
+        var localVideo = document.querySelector('#localVideo');
+        localVideo.srcObject = stream;
 
         localStream = stream;
 
