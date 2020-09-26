@@ -124,6 +124,8 @@ function prepareVideoChat(is18) {
             sendChannel = localConnection.createDataChannel("sendChannel");
             sendChannel.onopen = onSendChannelStateChange;
             sendChannel.onclose = onSendChannelStateChange;
+            //Chrome workaround
+            sendChannel.onclosing = onSendChannelStateChange;
             sendChannel.onmessage = handleReceiveMessage;
 
             localConnection.addStream(localStream);
@@ -196,6 +198,8 @@ function prepareVideoChat(is18) {
 
         sendChannel.onopen = onSendChannelStateChange;
         sendChannel.onclose = onSendChannelStateChange;
+        //Chrome workaround
+        sendChannel.onclosing = onSendChannelStateChange;
         sendChannel.onmessage = handleReceiveMessage;
     }
 
@@ -352,6 +356,8 @@ function prepareTextChat(is18) {
             sendChannel = localConnection.createDataChannel("sendChannel");
             sendChannel.onopen = onSendChannelStateChange;
             sendChannel.onclose = onSendChannelStateChange;
+            //Chrome workaround
+            sendChannel.onclosing = onSendChannelStateChange;
             sendChannel.onmessage = handleReceiveMessage;
 
             localConnection.createOffer().then(
@@ -405,6 +411,8 @@ function prepareTextChat(is18) {
 
         sendChannel.onopen = onSendChannelStateChange;
         sendChannel.onclose = onSendChannelStateChange;
+        //Chrome workaround
+        sendChannel.onclosing = onSendChannelStateChange;
         sendChannel.onmessage = handleReceiveMessage;
     }
 
