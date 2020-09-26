@@ -71,24 +71,22 @@ newOmeglit("/video18", lonelyClientVideo18, allClientsVideo18);
 function newOmeglit(url, lonely, allClients) {
     var ioPath = io.of(url);
     ioPath.on('connection', function (socket) {
-
         //console.log(socket.id, ' just came to website');
-
         socket.on('disconnect', function () {
             if (allClients[socket.id]) {
                 if (lonely.id == socket.id) {
                     lonely = {};
                 }
                 if (allClients[allClients[socket.id].partner]) {
-                    io.to(allClients[socket.id].partner).emit('aborted');
+                    //io.to(allClients[socket.id].partner).emit('disconnect');
                 }
 
                 delete allClients[socket.id];
 
                 emitUserCount();
 
-                console.log(socket.id, ' disconnected!');
-                console.log(countAllUsers() + ' users online');
+                //console.log(socket.id, ' disconnected!');
+                //console.log(countAllUsers() + ' users online');
             } else {
                 console.log('A user that never registered left');
             }
@@ -99,10 +97,10 @@ function newOmeglit(url, lonely, allClients) {
 
             allClients[socket.id] = socket;
 
-            console.log('New user looking for a partner: ', socket.id);
+            //console.log('New user looking for a partner: ', socket.id);
 
             if (lonely.id) {
-                console.log(lonely.id, ' emparejado con ', socket.id);
+                //console.log(lonely.id, ' emparejado con ', socket.id);
                 socket.partner = lonely.id;
                 allClients[lonely.id].partner = socket.id;
                 allClients[socket.id].partner = lonely.id;
@@ -119,29 +117,36 @@ function newOmeglit(url, lonely, allClients) {
                 lonely = {};
 
             } else {
-                console.log(socket.id, ' busca partner.');
+                //console.log(socket.id, ' busca partner.');
                 lonely.id = socket.id;
             }
 
-            console.log(countAllUsers() + ' users online')
+            //console.log(countAllUsers() + ' users online')
             emitUserCount();
 
         });
 
 
         socket.on('newMessage', function (data) {
-
             // console.log(data);
 
-            if (allClients[socket.id].partner) {
+            try {
 
-                if (allClients[allClients[socket.id].partner] !== undefined){
-                    allClients[allClients[socket.id].partner].emit('newMessage', data);
+                if (allClients[socket.id] !== undefined && allClients[socket.id].partner) {
+
+                    if (allClients[allClients[socket.id].partner] !== undefined){
+                        allClients[allClients[socket.id].partner].emit('newMessage', data);
+                    }
+
+                } else {
+                    io.to(socket.id).emit('aborted');
                 }
 
-            } else {
-                io.to(socket.id).emit('aborted');
+            } catch (error) {
+                var datetime = new Date();
+                console.error(datetime + ": " + error);
             }
+
         });
 
     });

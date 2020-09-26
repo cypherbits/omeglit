@@ -140,12 +140,12 @@ function prepareVideoChat(is18) {
     });
 
 
-    socketControl.on("aborted", function (data) {
+  /*  socketControl.on("disconnect", function (data) {
 
         chatLog.addSystemMessage("Stranger have disconnected.");
         disconnect();
 
-    });
+    });*/
 
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
@@ -363,12 +363,12 @@ function prepareTextChat(is18) {
     });
 
 
-    socketControl.on("aborted", function (data) {
+  /*  socketControl.on("disconnect", function (data) {
 
         chatLog.addSystemMessage("Stranger have disconnected.");
         disconnect();
 
-    });
+    });*/
 
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
