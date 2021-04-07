@@ -8,7 +8,7 @@
     "client",
     "browser"
   ],
-  "author": "juanjo",
+  "author": "cypherbits",
   "contributors": [],
   "dependencies": {
     "express": "^4.17.1",
