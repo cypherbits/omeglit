@@ -1,7 +1,7 @@
 'use strict';
 
-var URLConnection = "omeglit.com:8080";
-var URLProtocol = "https://";
+var URLConnection = "localhost:8080";
+var URLProtocol = "http://";
 
 var socketNUsers = null;
 var socketControl = null;
