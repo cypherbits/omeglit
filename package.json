@@ -1,17 +1,17 @@
 {
   "name": "omeglit",
   "version": "1.0.0",
+  "description": "Omegle clone experiment from when Omegle still worked with Flash Player",
   "keywords": [
-    "util",
-    "functional",
-    "server",
-    "client",
-    "browser"
+    "omegle",
+    "omeglit",
+    "webrtc",
+    "chatrandom"
   ],
   "author": "cypherbits",
   "contributors": [],
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "4.17.1",
     "socket.io": "2.3.*"
   }
 }

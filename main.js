@@ -1,53 +1,43 @@
-/*var express = require("express");
-//var fs = require('fs');
-//var cors = require('cors');
-var app = express();
+const args = process.argv.slice(2);
+console.log('app arguments: ', args);
 
-//var options = {
-//  key: fs.readFileSync('./privkey.pem'),
-//  cert: fs.readFileSync('./cert.pem'),
-//  ca: fs.readFileSync('./chain.pem')
-//};
+let server;
+if (args.length !== 0 && args[0] === "--localhost"){
+    console.log("using localhost configuration");
+    const express = require("express");
+    const app = express();
+    app.use(express.static('public'));
+    server = require("http").Server(app);
+}else{
+    const fs = require('fs');
+    const expressApp = require("express")();
+    const https = require("https");
+    server = https.createServer({
+        key: fs.readFileSync('./privkey.pem'),
+        cert: fs.readFileSync('./cert.pem'),
+        ca: fs.readFileSync('./chain.pem')
+    }, expressApp);
+}
 
-//var options = {};
-
-//var server = require("https").Server(options, app);
-var server = require("http").Server(app);
-var io = require("socket.io")(server);
-
-app.use(express.static('public'));
-
-//app.use(cors()); */
-var fs = require('fs');
-
-const expressApp = require("express")();
-
-const https = require("https");
-
-const server = https.createServer({
-    key: fs.readFileSync('./privkey.pem'),
-    cert: fs.readFileSync('./cert.pem'),
-    ca: fs.readFileSync('./chain.pem')
-}, expressApp);
 
 const io = require("socket.io")(server);
 
 /** CONFIG */
-var PORT = 8080;
+const PORT = 8080;
 
 /** GLOBAL VARIABLES */
 
-var lonelyClientTxt = {};
-var allClientsTxt = {};
+let lonelyClientTxt = {};
+let allClientsTxt = {};
 
-var lonelyClientVideo = {};
-var allClientsVideo = {};
+let lonelyClientVideo = {};
+let allClientsVideo = {};
 
-var lonelyClientTxt18 = {};
-var allClientsTxt18 = {};
+let lonelyClientTxt18 = {};
+let allClientsTxt18 = {};
 
-var lonelyClientVideo18 = {};
-var allClientsVideo18 = {};
+let lonelyClientVideo18 = {};
+let allClientsVideo18 = {};
 
 
 function countAllUsers() {
@@ -69,12 +59,12 @@ newOmeglit("/video18", lonelyClientVideo18, allClientsVideo18);
 
 
 function newOmeglit(url, lonely, allClients) {
-    var ioPath = io.of(url);
+    const ioPath = io.of(url);
     ioPath.on('connection', function (socket) {
         //console.log(socket.id, ' just came to website');
         socket.on('disconnect', function () {
             if (allClients[socket.id]) {
-                if (lonely.id == socket.id) {
+                if (lonely.id === socket.id) {
                     lonely = {};
                 }
                 if (allClients[allClients[socket.id].partner]) {
@@ -143,7 +133,7 @@ function newOmeglit(url, lonely, allClients) {
                 }
 
             } catch (error) {
-                var datetime = new Date();
+                const datetime = new Date();
                 console.error(datetime + ": " + error);
             }
 
@@ -154,5 +144,5 @@ function newOmeglit(url, lonely, allClients) {
 
 
 server.listen(PORT, "0.0.0.0", function () {
-    console.log("Servidor iniciado en el puerto " + PORT);
+    console.log("Server started on port " + PORT);
 });
