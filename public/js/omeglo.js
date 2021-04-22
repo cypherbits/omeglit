@@ -263,7 +263,7 @@ function prepareVideoChat(is18) {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-
+            $("#btnNewChat").removeProp("disabled");
             disconnect();
 
         }
@@ -476,7 +476,7 @@ function prepareTextChat(is18) {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-
+            $("#btnNewChat").removeProp("disabled");
             disconnect();
 
         }
