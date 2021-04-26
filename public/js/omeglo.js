@@ -1,24 +1,26 @@
 'use strict';
 
-var URLConnection = "localhost:8080";
-var URLProtocol = "http://";
+let URLConnection = "omeglit.com";
+let URLProtocol = "https://";
 
-var socketNUsers = null;
-var socketControl = null;
-var localStream = null;
+if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
+    URLConnection = "localhost:8080";
+    URLProtocol = "http://";
+}
 
-var page = null;
+let socketNUsers = null;
+let socketControl = null;
+let localStream = null;
 
-var iceServers = {
+let page = null;
+
+const iceServers = {
     'iceServers': [
         {
             'url': 'stun:stun.l.google.com:19302'
         },
         {
-            'url': 'stun:stun1.l.google.com:19302'
-        },
-        {
-            'url': 'stun:stun2.l.google.com:19302'
+            'url': 'stun.services.mozilla.com:3478'
         }
     ]
 };
