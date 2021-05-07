@@ -1,8 +1,16 @@
-### Code of omeglit.com
+### Code of omeglit.com v2
 
 This is a Omegle clone experiment from when Omegle still worked with Flash Player.
 
 Updated and tested with Node 10.19
+
+Version 2.0 vs 1.0:
+- Socket.io client and server updated from 2.4 to 4.0.2
+- Updated client adapter.js to v8.
+- Updated Bootstrap from 3.x to 4.6. And redesig.
+- Updated jQuery to 3.6.
+- Refactor and removed duplicated code of omeglo.js (main client functional js).
+- New features and fixes: new message notification in title + set remote video to black when disconnected + mute your microphone.
 
 ### How to run
 
