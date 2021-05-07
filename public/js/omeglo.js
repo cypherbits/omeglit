@@ -12,15 +12,17 @@ let socketNUsers = null;
 let socketControl = null;
 let localStream = null;
 
-let page = null;
+let isText = false;
+let isVideo = false;
+let is18 = false;
 
 const iceServers = {
     'iceServers': [
         {
-            'url': 'stun:stun.l.google.com:19302'
+            'urls': 'stun:stun.l.google.com:19302'
         },
         {
-            'url': 'stun.services.mozilla.com:3478'
+            'urls': 'stun:stun.services.mozilla.com:3478'
         }
     ]
 };
@@ -40,19 +42,27 @@ $(document).ready(function () {
 
     $("#btnCleanText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
-            prepareTextChat(false);
+            isText = true;
+            isVideo = false;
+            is18 = false;
+            prepareChat();
         });
     });
 
     $("#btnNomoText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
-            prepareTextChat(true);
+            isText = true;
+            isVideo = false;
+            is18 = true;
+            prepareChat();
         });
     });
 
     $("#btnCleanVideo").on("click", function () {
         $("#pageContainer").load("video.html", function () {
-
+            isText = false;
+            isVideo = true;
+            is18 = false;
             prepareCamera(false);
             //prepareVideoChat(false);
         });
@@ -61,7 +71,9 @@ $(document).ready(function () {
 
     $("#btnNomoVideo").on("click", function () {
         $("#pageContainer").load("video.html", function () {
-
+            isText = false;
+            isVideo = true;
+            is18 = true;
             prepareCamera(true);
             //prepareVideoChat(true);
         });
@@ -75,8 +87,6 @@ $(document).ready(function () {
 
 
 function prepareVideoChat(is18) {
-
-    page = "video";
 
 //    var videoTracks = localStream.getVideoTracks();
 //    var audioTracks = localStream.getAudioTracks();
@@ -301,7 +311,7 @@ function prepareVideoChat(is18) {
 
         $("#btnNewChat").html("New chat");
         $("#btnNewChat").unbind().on("click", function () {
-            prepareTextChat(false);
+            prepareChat(false);
         });
         $("#btnSendMessage").prop("disabled", true);
         $("#txtNewMessage").prop("disabled", true);
@@ -310,22 +320,20 @@ function prepareVideoChat(is18) {
 }
 
 
-function prepareTextChat(is18) {
-
-    page = "text";
+function prepareChat() {
 
     if (is18) {
-        $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
-        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
-        $("body").addClass("adult-text");
+        $("#btnNewChat").removeClass("btn-primary").addClass("btn-danger");
+        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-danger");
+        $("body").addClass("text-danger");
     }
 
     $("#btnNewChat").prop("disabled", true);
     $("#btnSendMessage").prop("disabled", true);
 
     $('#txtNewMessage').unbind().keypress(function (event) {
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == "13") {
+        const keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode === 13) {
             $('#btnSendMessage').click();
             return false;
         }
@@ -334,12 +342,12 @@ function prepareTextChat(is18) {
     chatLog.clear();
     chatLog.addSystemMessage("Looking for a partner...");
 
-    var localConnection = new RTCPeerConnection(iceServers);
+    let localConnection = new RTCPeerConnection(iceServers);
 
     localConnection.onicecandidate = onICECandidate;
     localConnection.ondatachannel = receiveChannelCallback;
 
-    var sendChannel = null;
+    let sendChannel = null;
 
     if (is18) {
         socketControl = io.connect(URLProtocol + URLConnection + '/txt18');
@@ -491,7 +499,7 @@ function prepareTextChat(is18) {
     function sendMessage() {
         var msg = $("#txtNewMessage").val();
 
-        if (msg.trim() != "") {
+        if (msg.trim() !== "") {
             sendChannel.send(msg.trim());
 
             $("#txtNewMessage").val("");
@@ -514,7 +522,7 @@ function prepareTextChat(is18) {
 
         $("#btnNewChat").html("New chat");
         $("#btnNewChat").unbind().on("click", function () {
-            prepareTextChat(false);
+            prepareChat(false);
         });
         $("#btnSendMessage").prop("disabled", true);
         $("#txtNewMessage").prop("disabled", true);
@@ -542,9 +550,9 @@ function prepareCamera(is18) {
     resizeCamera();
 
     if (is18) {
-        $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
-        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
-        $("body").addClass("adult-text");
+        $("#btnNewChat").removeClass("btn-primary").addClass("btn-danger");
+        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-danger");
+        $("body").addClass("text-danger");
     }
 
     chatLog.clear();
@@ -617,10 +625,10 @@ function isBreakpoint(alias) {
 }
 
 $(window).resize(function () {
-    if (page === "video"){
+    if (isVideo){
         resizeVideos();
     }
-    if (page === "videos" || page === "text"){
+    if (isVideo || isText){
         updateScroll();
     }
 });

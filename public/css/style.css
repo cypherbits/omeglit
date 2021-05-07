@@ -56,22 +56,11 @@ noscript{
 }
 
 #txtNewMessage{
-    width: 100%;
-    height: 100%;
     resize: none;
 }
 
 .nomargin{
     margin:0;
-}
-
-.adult-text h2, .adult-text h1 a{
-    color:#c71c22;
-}
-
-.btn-adult{
-    background-color: #c71c22 !important;
-    color:#FFF !important;
 }
 
 #divHover{
@@ -95,14 +84,14 @@ noscript{
 }
 
 #divInput{
-    position: absolute; bottom: .5em;left: .5em;right: .5em;height: 5em;
+    position: absolute; bottom: .1em;left: .5em;right: .5em;
     background-color:whitesmoke;
 }
 
 /**
 Custom boostrap
  */
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, a{
     color: #006cac;
 }
 h1 small{
