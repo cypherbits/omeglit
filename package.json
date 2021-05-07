@@ -12,6 +12,6 @@
   "contributors": [],
   "dependencies": {
     "express": "4.17.1",
-    "socket.io": "2.4.1"
+    "socket.io": "4.0.2"
   }
 }
