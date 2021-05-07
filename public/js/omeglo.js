@@ -32,10 +32,10 @@ $(document).ready(function () {
         $("#txtNUsers").html(data.nusers);
         //console.log(data.nusers);
 
-        $("#btnCleanText").removeProp("disabled");
-        $("#btnCleanVideo").removeProp("disabled");
-        $("#btnNomoText").removeProp("disabled");
-        $("#btnNomoVideo").removeProp("disabled");
+        $("#btnCleanText").prop("disabled", false);
+        $("#btnCleanVideo").prop("disabled", false);
+        $("#btnNomoText").prop("disabled", false);
+        $("#btnNomoVideo").prop("disabled", false);
     });
 
     $("#btnCleanText").on("click", function () {
@@ -92,7 +92,7 @@ function prepareVideoChat(is18) {
 
     $('#txtNewMessage').unbind().keypress(function (event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == "13") {
+        if (keycode === 13) {
             $('#btnSendMessage').click();
             return false;
         }
@@ -258,14 +258,14 @@ function prepareVideoChat(is18) {
                 chatLog.addSystemMessage("You have disconnected.");
                 disconnect();
             });
-            $("#btnNewChat").removeProp("disabled");
-            $("#btnSendMessage").removeProp("disabled");
-            $("#txtNewMessage").removeProp("disabled");
+            $("#btnNewChat").prop("disabled", false);
+            $("#btnSendMessage").prop("disabled", false);
+            $("#txtNewMessage").prop("disabled", false);
         } else {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-            $("#btnNewChat").removeProp("disabled");
+            $("#btnNewChat").prop("disabled", false);
             disconnect();
 
         }
@@ -471,14 +471,14 @@ function prepareTextChat(is18) {
                 chatLog.addSystemMessage("You have disconnected.");
                 disconnect();
             });
-            $("#btnNewChat").removeProp("disabled");
-            $("#btnSendMessage").removeProp("disabled");
-            $("#txtNewMessage").removeProp("disabled");
+            $("#btnNewChat").prop("disabled", false);
+            $("#btnSendMessage").prop("disabled", false);
+            $("#txtNewMessage").prop("disabled", false);
         } else {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-            $("#btnNewChat").removeProp("disabled");
+            $("#btnNewChat").prop("disabled", false);
             disconnect();
 
         }
