@@ -20,13 +20,6 @@ noscript{
     z-index: 10;
 }
 
-#chatArea{
-    border:solid 1px grey;
-    border-top-left-radius:1em;
-    border-top-right-radius:1em;
-    background-color:#FFFFFF;
-}
-
 #txtChatLog{
     padding: 0.4em;
     overflow-y: auto;
@@ -52,7 +45,8 @@ noscript{
 
 #localVideo, #remoteVideo{
     width: 100%;
-    background-color: #333;
+    background-color: #111;
+    border-radius: .25em;
 }
 
 #txtNewMessage{
@@ -72,20 +66,15 @@ noscript{
 }
 
 #leftColumn{
-    border-right: solid 1px grey; height: 100%; background-color:whitesmoke;
+    height: 100%; background-color:#4a4a4a; border-top-left-radius: .25em; border-bottom-left-radius: .25em;
 }
 
 #leftColumn.mobile{
     height: auto !important;
 }
 
-#divOrigVideo1, #divOrigVideo2{
-    
-}
-
 #divInput{
     position: absolute; bottom: .1em;left: .5em;right: .5em;
-    background-color:whitesmoke;
 }
 
 /**

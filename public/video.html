@@ -1,76 +1,77 @@
 <div style="position:fixed; height: 100%; padding-top:1em;" class="col-md-12 col-xs-12">
     <div id="header">
-        <div class="pull-left">
-            <h1><a href="index.html">Omeglit:</a> <small>Talk to strangers! (Beta)</small></h1>
+        <div class="float-left">
+            <h1><a href="index.html">Omeglit:</a><small>Talk to strangers! (Beta)</small></h1>
         </div>
-        <div class="pull-right">
+        <div class="float-right">
             <h2><span id="txtNUsers">x</span>+ online now</h2>
         </div>
         <div class="clearfix"></div>
     </div>
-    <div id="chatArea" style="position: absolute; top:5em; left: .5em;right: .5em;bottom: 6em;">
-        <div id="leftColumn" class="col-md-3 col-sm-4 col-xs-12">
-            <div id="divOrigVideo1" class="row">
-                <video id="remoteVideo" autoplay="autoplay"></video>
-            </div>
-            <div id="divOrigVideo2" class="row">
-                <video id="localVideo" autoplay="autoplay" muted=""></video>
-            </div>
-        </div>
-
-        <div id="txtChatLog" class="col-md-9 col-sm-8 col-xs-12">
-
-
-            <div class="item">
-                You're now chatting with a random stranger. Say hi!
+    <div id="chatArea" class="card shadow-sm" style="position: absolute; top:5em; left: .5em;right: .5em;bottom: 6em;">
+        <div class="row mr-0 ml-0 vh-100">
+            <div id="leftColumn" class="col-4 col-sm-3 col-xs-12 p-1">
+                <div id="divOrigVideo1">
+                    <video id="remoteVideo" autoplay="autoplay"></video>
+                </div>
+                <div id="divOrigVideo2">
+                    <video id="localVideo" autoplay="autoplay" muted=""></video>
+                </div>
             </div>
 
-            <div class="item">
-                You both speak the same language. 
+            <div id="txtChatLog" class="col-8 col-sm-9 col-xs-12">
+
+                <div class="item">
+                    You're now chatting with a random stranger. Say hi!
+                </div>
+
+                <div class="item">
+                    You both speak the same language.
+                </div>
+
+                <div class="item">
+                    You both like <i>youtube, video</i>.
+                </div>
+
+                <div class="item">
+                    You both are from the same country.
+                </div>
+
+                <div class="item">
+                    <span class="you">You: </span><span class="msg">ola </span>
+                </div>
+
+                <div class="item">
+                    <span class="stranger">Stranger: </span><span class="msg">hola </span>
+                </div>
+
+                <div class="item">
+                    You have disconnected.
+                </div>
+
+                <div class="item">
+                    You are looking for people who talk your language and wants to talk about: youtube, video.
+
+                    <a href="#">Change preferences</a>
+                </div>
+
+                <div class="item">
+                    <button class="btn btn-lg btn-primary">New chat</button>
+                </div>
+
             </div>
-
-            <div class="item">
-                You both like <i>youtube, video</i>. 
-            </div>
-
-            <div class="item">
-                You both are from the same country. 
-            </div>
-
-            <div class="item">
-                <span class="you">You: </span><span class="msg">ola </span>
-            </div>
-
-            <div class="item">
-                <span class="stranger">Stranger: </span><span class="msg">hola </span> 
-            </div>
-
-            <div class="item">
-                You have disconnected.
-            </div>
-
-            <div class="item">
-                You are looking for people who talk your language and wants to talk about: youtube, video.
-
-                <a href="#">Change preferences</a>
-            </div>
-
-            <div class="item">
-                <button class="btn btn-lg btn-primary">New chat</button> 
-            </div>
-
         </div>
     </div>
     <div id="divInput">
-        <div class="input-group">
-            <span class="input-group-btn">
-                <button class="btn btn-lg btn-primary btn-block" id="btnNewChat" disabled="">New chat</button>
-            </span>
-            <textarea class="form-control" placeholder="Say Hi!" id="txtNewMessage" style="height: 5.2em; border-radius: 4px; box-shadow: none !important;" disabled=""></textarea>
-            <span class="input-group-btn">
-                <button class="btn btn-primary btn-block" id="btnSendMessage" disabled="">Send</button>
-            </span>
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend">
+                <button class="btn btn-lg btn-primary btn-block" id="btnNewChat" disabled>New chat</button>
+            </div>
+            <textarea class="form-control" placeholder="Say Hi!" id="txtNewMessage" disabled></textarea>
+            <div class="input-group-append">
+                <button class="btn btn-primary btn-block" id="btnSendMessage" disabled>Send</button>
+            </div>
         </div>
     </div>
-    <div class="device-xs visible-xs"></div>
+    <div class="device-xs d-sm-block"></div>
 </div>

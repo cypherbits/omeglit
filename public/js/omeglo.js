@@ -534,7 +534,7 @@ function prepareChat() {
 function prepareCamera(is18) {
 
     $(window).resize(function () {
-        resizeCamera();
+        //resizeCamera();
     });
 
     function resizeCamera() {
@@ -547,7 +547,7 @@ function prepareCamera(is18) {
         }
     }
 
-    resizeCamera();
+    //resizeCamera();
 
     if (is18) {
         $("#btnNewChat").removeClass("btn-primary").addClass("btn-danger");
@@ -626,7 +626,7 @@ function isBreakpoint(alias) {
 
 $(window).resize(function () {
     if (isVideo){
-        resizeVideos();
+        //resizeVideos();
     }
     if (isVideo || isText){
         updateScroll();
