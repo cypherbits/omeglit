@@ -1,5 +1,8 @@
 'use strict';
 
+const pageTitle = "Omeglit: Talk to strangers and meet new friends";
+const newMessageText = "(Unread) ";
+
 let URLConnection = "omeglit.com";
 let URLProtocol = "https://";
 
@@ -79,6 +82,10 @@ $(document).ready(function () {
 
     $("#btnHover").on("click", function () {
         $("#divHover").hide();
+    });
+
+    $(window).focus(function() {
+        document.title = pageTitle;
     });
 
 });
@@ -259,6 +266,7 @@ function prepareChat() {
     function handleReceiveMessage(event) {
         //console.log("new MESSAGE: " + event.data);
         chatLog.addStrangerMessage(event.data);
+        document.title = newMessageText + pageTitle;
     }
 
     function onICECandidate(ice) {
@@ -340,6 +348,11 @@ function prepareChat() {
     }
 
     function disconnect() {
+
+        if (isVideo){
+            const remoteVideo = document.querySelector('#remoteVideo');
+            remoteVideo.src = null;
+        }
 
         sendChannel.close();
 
