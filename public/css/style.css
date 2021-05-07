@@ -9,8 +9,8 @@ body{
 
 noscript{
     position:fixed;
-    top:0px;
-    left:0px;
+    top:0;
+    left:0;
     width:100%;
     height:100%;
     background-color: whitesmoke;
@@ -18,7 +18,6 @@ noscript{
 
 #header{
     z-index: 10;
-    margin-top:-20px;
 }
 
 #chatArea{
@@ -62,12 +61,8 @@ noscript{
     resize: none;
 }
 
-.nopadding{
-    padding:0px;
-}
-
 .nomargin{
-    margin:0px;
+    margin:0;
 }
 
 .adult-text h2, .adult-text h1 a{
@@ -80,7 +75,7 @@ noscript{
 }
 
 #divHover{
-    position:absolute; top:0px; background-color:#FFF; width: 100%; height: 100%; right: 0px;
+    position:absolute; top:0; background-color:#FFF; width: 100%; height: 100%; right: 0;
 }
 
 #divOrigVideo2.mobile{
