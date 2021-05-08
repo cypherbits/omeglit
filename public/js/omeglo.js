@@ -1,9 +1,12 @@
 'use strict';
 
+const pageTitle = "Omeglit: Talk to strangers and meet new friends";
+const newMessageText = "(Unread) ";
+
 let URLConnection = "omeglit.com";
 let URLProtocol = "https://";
 
-if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
+if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     URLConnection = "localhost:8080";
     URLProtocol = "http://";
 }
@@ -12,15 +15,17 @@ let socketNUsers = null;
 let socketControl = null;
 let localStream = null;
 
-let page = null;
+let isText = false;
+let isVideo = false;
+let is18 = false;
 
 const iceServers = {
     'iceServers': [
         {
-            'url': 'stun:stun.l.google.com:19302'
+            'urls': 'stun:stun.l.google.com:19302'
         },
         {
-            'url': 'stun.services.mozilla.com:3478'
+            'urls': 'stun:stun.services.mozilla.com:3478'
         }
     ]
 };
@@ -32,38 +37,46 @@ $(document).ready(function () {
         $("#txtNUsers").html(data.nusers);
         //console.log(data.nusers);
 
-        $("#btnCleanText").removeProp("disabled");
-        $("#btnCleanVideo").removeProp("disabled");
-        $("#btnNomoText").removeProp("disabled");
-        $("#btnNomoVideo").removeProp("disabled");
+        $("#btnCleanText").prop("disabled", false);
+        $("#btnCleanVideo").prop("disabled", false);
+        $("#btnNomoText").prop("disabled", false);
+        $("#btnNomoVideo").prop("disabled", false);
     });
 
     $("#btnCleanText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
-            prepareTextChat(false);
+            isText = true;
+            isVideo = false;
+            is18 = false;
+            prepareChat();
         });
     });
 
     $("#btnNomoText").on("click", function () {
         $("#pageContainer").load("text.html", function () {
-            prepareTextChat(true);
+            isText = true;
+            isVideo = false;
+            is18 = true;
+            prepareChat();
         });
     });
 
     $("#btnCleanVideo").on("click", function () {
         $("#pageContainer").load("video.html", function () {
-
-            prepareCamera(false);
-            //prepareVideoChat(false);
+            isText = false;
+            isVideo = true;
+            is18 = false;
+            prepareCamera();
         });
     });
 
 
     $("#btnNomoVideo").on("click", function () {
         $("#pageContainer").load("video.html", function () {
-
-            prepareCamera(true);
-            //prepareVideoChat(true);
+            isText = false;
+            isVideo = true;
+            is18 = true;
+            prepareCamera();
         });
     });
 
@@ -71,14 +84,40 @@ $(document).ready(function () {
         $("#divHover").hide();
     });
 
+    $(window).focus(function() {
+        document.title = pageTitle;
+    });
+
 });
 
 
-function prepareVideoChat(is18) {
+const chatLog = {
+    clear: function () {
+        $("#txtChatLog").html("");
+    },
+    addSystemMessage: function (data) {
+        $("#txtChatLog").append('<div class="item">' + data + '</div>');
+        updateScroll();
+    },
+    addStrangerMessage: function (data) {
+        const encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+            return '&#' + i.charCodeAt(0) + ';';
+        });
+        $("#txtChatLog").append('<div class="item"><span class="stranger">Stranger: </span><span class="msg">' + encodedStr + '</span></div>');
+        updateScroll();
+    },
+    addMeMessage: function (data) {
+        const encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+            return '&#' + i.charCodeAt(0) + ';';
+        });
+        $("#txtChatLog").append('<div class="item"><span class="you">You: </span><span class="msg">' + encodedStr + '</span></div>');
+        updateScroll();
+    }
+};
 
-    page = "video";
+function prepareChat() {
 
-//    var videoTracks = localStream.getVideoTracks();
+    //    var videoTracks = localStream.getVideoTracks();
 //    var audioTracks = localStream.getAudioTracks();
 //    if (videoTracks.length > 0) {
 //        trace('Using video device: ' + videoTracks[0].label);
@@ -87,12 +126,18 @@ function prepareVideoChat(is18) {
 //        trace('Using audio device: ' + audioTracks[0].label);
 //    }
 
+    if (is18) {
+        $("#btnNewChat").removeClass("btn-primary").addClass("btn-danger");
+        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-danger");
+        $("body").addClass("text-danger");
+    }
+
     $("#btnNewChat").prop("disabled", true);
     $("#btnSendMessage").prop("disabled", true);
 
     $('#txtNewMessage').unbind().keypress(function (event) {
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == "13") {
+        const keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode === 13) {
             $('#btnSendMessage').click();
             return false;
         }
@@ -101,20 +146,29 @@ function prepareVideoChat(is18) {
     chatLog.clear();
     chatLog.addSystemMessage("Looking for a partner...");
 
-    var localConnection = new RTCPeerConnection(iceServers);
+    let localConnection = new RTCPeerConnection(iceServers);
 
     localConnection.onicecandidate = onICECandidate;
     localConnection.ondatachannel = receiveChannelCallback;
-    localConnection.onaddstream = receiveStreamCallback;
-
-    var sendChannel = null;
-
-    if (is18) {
-        socketControl = io.connect(URLProtocol + URLConnection + '/video18');
-    } else {
-        socketControl = io.connect(URLProtocol + URLConnection + '/video');
+    if (isVideo) {
+        localConnection.onaddstream = receiveStreamCallback;
     }
 
+    let sendChannel = null;
+
+    if (is18) {
+        if (isVideo) {
+            socketControl = io.connect(URLProtocol + URLConnection + '/video18');
+        } else {
+            socketControl = io.connect(URLProtocol + URLConnection + '/txt18');
+        }
+    } else {
+        if (isVideo) {
+            socketControl = io.connect(URLProtocol + URLConnection + '/video');
+        } else {
+            socketControl = io.connect(URLProtocol + URLConnection + '/txt');
+        }
+    }
 
     socketControl.emit('newUser', {});
 
@@ -130,38 +184,42 @@ function prepareVideoChat(is18) {
             sendChannel.onclosing = onSendChannelStateChange;
             sendChannel.onmessage = handleReceiveMessage;
 
-            localConnection.addStream(localStream);
+            let options = {};
+            if (isVideo) {
+                localConnection.addStream(localStream);
+                options = {
+                    audio: true,
+                    video: true
+                };
+            }
 
-            localConnection.createOffer({
-                audio: true,
-                video: true
-            }).then(
-                    gotDescription,
-                    onCreateSessionDescriptionError
-                    );
+            localConnection.createOffer(options).then(
+                gotDescription,
+                onCreateSessionDescriptionError
+            );
         }
 
     });
 
 
-  /*  socketControl.on("disconnect", function (data) {
+    /*  socketControl.on("disconnect", function (data) {
 
-        chatLog.addSystemMessage("Stranger have disconnected.");
-        disconnect();
+          chatLog.addSystemMessage("Stranger have disconnected.");
+          disconnect();
 
-    });*/
+      });*/
 
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
             case "new-offer":
-
-                localConnection.addStream(localStream);
-
+                if (isVideo) {
+                    localConnection.addStream(localStream);
+                }
                 localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)), function () {
                     localConnection.createAnswer().then(
-                            gotAnswer,
-                            onCreateAnswerError
-                            );
+                        gotAnswer,
+                        onCreateAnswerError
+                    );
                 }, function (e) {
                     console.error("ERROR" + e);
                 });
@@ -185,7 +243,7 @@ function prepareVideoChat(is18) {
     function receiveStreamCallback(e) {
         //remoteVideo.srcObject = e.stream;
         //$('#remoteVideo').prop('src', URL.createObjectURL(e.stream));
-        var remoteVideo = document.querySelector('#remoteVideo');
+        const remoteVideo = document.querySelector('#remoteVideo');
         remoteVideo.srcObject = e.stream;
 
         //console.log("remote video stream add");
@@ -208,6 +266,7 @@ function prepareVideoChat(is18) {
     function handleReceiveMessage(event) {
         //console.log("new MESSAGE: " + event.data);
         chatLog.addStrangerMessage(event.data);
+        document.title = newMessageText + pageTitle;
     }
 
     function onICECandidate(ice) {
@@ -246,7 +305,7 @@ function prepareVideoChat(is18) {
     }
 
     function onSendChannelStateChange() {
-        var readyState = sendChannel.readyState;
+        const readyState = sendChannel.readyState;
         console.log('Send channel state is: ' + readyState);
         if (readyState === 'open') {
             //habilitar botones para enviar
@@ -258,14 +317,14 @@ function prepareVideoChat(is18) {
                 chatLog.addSystemMessage("You have disconnected.");
                 disconnect();
             });
-            $("#btnNewChat").removeProp("disabled");
-            $("#btnSendMessage").removeProp("disabled");
-            $("#txtNewMessage").removeProp("disabled");
+            $("#btnNewChat").prop("disabled", false);
+            $("#btnSendMessage").prop("disabled", false);
+            $("#txtNewMessage").prop("disabled", false);
         } else {
             //deshabilitar botones para enviar
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
-            $("#btnNewChat").removeProp("disabled");
+            $("#btnNewChat").prop("disabled", false);
             disconnect();
 
         }
@@ -276,9 +335,9 @@ function prepareVideoChat(is18) {
     });
 
     function sendMessage() {
-        var msg = $("#txtNewMessage").val();
+        const msg = $("#txtNewMessage").val();
 
-        if (msg.trim() != "") {
+        if (msg.trim() !== "") {
             sendChannel.send(msg.trim());
 
             $("#txtNewMessage").val("");
@@ -289,6 +348,11 @@ function prepareVideoChat(is18) {
     }
 
     function disconnect() {
+
+        if (isVideo){
+            const remoteVideo = document.querySelector('#remoteVideo');
+            remoteVideo.src = null;
+        }
 
         sendChannel.close();
 
@@ -301,7 +365,7 @@ function prepareVideoChat(is18) {
 
         $("#btnNewChat").html("New chat");
         $("#btnNewChat").unbind().on("click", function () {
-            prepareTextChat(false);
+            prepareChat(false);
         });
         $("#btnSendMessage").prop("disabled", true);
         $("#txtNewMessage").prop("disabled", true);
@@ -310,220 +374,7 @@ function prepareVideoChat(is18) {
 }
 
 
-function prepareTextChat(is18) {
-
-    page = "text";
-
-    if (is18) {
-        $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
-        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
-        $("body").addClass("adult-text");
-    }
-
-    $("#btnNewChat").prop("disabled", true);
-    $("#btnSendMessage").prop("disabled", true);
-
-    $('#txtNewMessage').unbind().keypress(function (event) {
-        var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == "13") {
-            $('#btnSendMessage').click();
-            return false;
-        }
-    });
-
-    chatLog.clear();
-    chatLog.addSystemMessage("Looking for a partner...");
-
-    var localConnection = new RTCPeerConnection(iceServers);
-
-    localConnection.onicecandidate = onICECandidate;
-    localConnection.ondatachannel = receiveChannelCallback;
-
-    var sendChannel = null;
-
-    if (is18) {
-        socketControl = io.connect(URLProtocol + URLConnection + '/txt18');
-    } else {
-        socketControl = io.connect(URLProtocol + URLConnection + '/txt');
-    }
-
-
-    socketControl.emit('newUser', {});
-
-    socketControl.on("match", function (data) {
-        console.log("creating offer");
-        chatLog.addSystemMessage("Partner found, trying to connect...");
-
-        if (data.itsok) {
-            sendChannel = localConnection.createDataChannel("sendChannel");
-            sendChannel.onopen = onSendChannelStateChange;
-            sendChannel.onclose = onSendChannelStateChange;
-            //Chrome workaround
-            sendChannel.onclosing = onSendChannelStateChange;
-            sendChannel.onmessage = handleReceiveMessage;
-
-            localConnection.createOffer().then(
-                    gotDescription,
-                    onCreateSessionDescriptionError
-                    );
-        }
-
-    });
-
-
-  /*  socketControl.on("disconnect", function (data) {
-
-        chatLog.addSystemMessage("Stranger have disconnected.");
-        disconnect();
-
-    });*/
-
-    socketControl.on("newMessage", function (data) {
-        switch (data.type) {
-            case "new-offer":
-                localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)), function () {
-                    localConnection.createAnswer().then(
-                            gotAnswer,
-                            onCreateAnswerError
-                            );
-                }, function (e) {
-                    console.error("ERROR" + e);
-                });
-
-                console.debug("we got new remote offer: " + JSON.parse(data.msg));
-                break;
-            case "new-answer":
-                localConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(data.msg)));
-                console.debug("we got new remote answer: " + JSON.parse(data.msg));
-                break;
-            case "new-ice":
-                if (JSON.parse(data.msg) != null) {
-                    localConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(data.msg)));
-                }
-
-                console.debug("we got new remote ICE candidate: " + JSON.parse(data.msg));
-                break;
-        }
-    });
-
-    function receiveChannelCallback(event) {
-        console.log("channel received");
-
-        sendChannel = event.channel;
-
-        sendChannel.onopen = onSendChannelStateChange;
-        sendChannel.onclose = onSendChannelStateChange;
-        //Chrome workaround
-        sendChannel.onclosing = onSendChannelStateChange;
-        sendChannel.onmessage = handleReceiveMessage;
-    }
-
-    function handleReceiveMessage(event) {
-        //console.log("new MESSAGE: " + event.data);
-        chatLog.addStrangerMessage(event.data);
-    }
-
-    function onICECandidate(ice) {
-        console.dir("sending new ICE candidate: " + ice.candidate);
-        socketControl.emit('newMessage', {
-            type: 'new-ice',
-            msg: JSON.stringify(ice.candidate)
-        });
-    }
-
-    function onCreateSessionDescriptionError(error) {
-        console.error('Failed to create session description: ' + error.toString());
-    }
-
-    function onCreateAnswerError(error) {
-        console.error('Failed to create session answer: ' + error.toString());
-    }
-
-    function gotAnswer(data) {
-        console.debug("sending answer: " + data);
-        localConnection.setLocalDescription(data);
-        socketControl.emit('newMessage', {
-            type: 'new-answer',
-            msg: JSON.stringify(data)
-        });
-    }
-
-    function gotDescription(desc) {
-        localConnection.setLocalDescription(desc);
-        console.debug('sending offer ' + desc.sdp);
-
-        socketControl.emit('newMessage', {
-            type: 'new-offer',
-            msg: JSON.stringify(desc)
-        });
-    }
-
-    function onSendChannelStateChange() {
-        var readyState = sendChannel.readyState;
-        console.log('Send channel state is: ' + readyState);
-        if (readyState === 'open') {
-            //habilitar botones para enviar
-            chatLog.clear();
-            chatLog.addSystemMessage("You're now chatting with a random stranger. Say hi!");
-
-            $("#btnNewChat").html("Disconnect");
-            $("#btnNewChat").unbind().on("click", function () {
-                chatLog.addSystemMessage("You have disconnected.");
-                disconnect();
-            });
-            $("#btnNewChat").removeProp("disabled");
-            $("#btnSendMessage").removeProp("disabled");
-            $("#txtNewMessage").removeProp("disabled");
-        } else {
-            //deshabilitar botones para enviar
-            console.log("not data channel open");
-            chatLog.addSystemMessage("Stranger have disconnected.");
-            $("#btnNewChat").removeProp("disabled");
-            disconnect();
-
-        }
-    }
-
-    $("#btnSendMessage").unbind().on("click", function () {
-        sendMessage();
-    });
-
-    function sendMessage() {
-        var msg = $("#txtNewMessage").val();
-
-        if (msg.trim() != "") {
-            sendChannel.send(msg.trim());
-
-            $("#txtNewMessage").val("");
-
-            chatLog.addMeMessage(msg);
-        }
-
-    }
-
-    function disconnect() {
-
-        sendChannel.close();
-
-        localConnection.close();
-
-        sendChannel = null;
-        localConnection = null;
-
-        socketControl.close();
-
-        $("#btnNewChat").html("New chat");
-        $("#btnNewChat").unbind().on("click", function () {
-            prepareTextChat(false);
-        });
-        $("#btnSendMessage").prop("disabled", true);
-        $("#txtNewMessage").prop("disabled", true);
-    }
-
-}
-
-
-function prepareCamera(is18) {
+function prepareCamera() {
 
     $(window).resize(function () {
         resizeCamera();
@@ -541,12 +392,6 @@ function prepareCamera(is18) {
 
     resizeCamera();
 
-    if (is18) {
-        $("#btnNewChat").removeClass("btn-primary").addClass("btn-adult");
-        $("#btnSendMessage").removeClass("btn-primary").addClass("btn-adult");
-        $("body").addClass("adult-text");
-    }
-
     chatLog.clear();
     chatLog.addSystemMessage("Enable access to your webcam");
 
@@ -555,12 +400,12 @@ function prepareCamera(is18) {
         // Set your video displays
 
         //$('#localVideo').prop('src', window.URL.createObjectURL(stream));
-        var localVideo = document.querySelector('#localVideo');
+        const localVideo = document.querySelector('#localVideo');
         localVideo.srcObject = stream;
 
         localStream = stream;
 
-        prepareVideoChat(is18);
+        prepareChat();
 
     }, function (error) {
         console.error(error);
@@ -583,32 +428,8 @@ function trace(text) {
 
 }
 
-var chatLog = {
-    clear: function () {
-        $("#txtChatLog").html("");
-    },
-    addSystemMessage: function (data) {
-        $("#txtChatLog").append('<div class="item">' + data + '</div>');
-        updateScroll();
-    },
-    addStrangerMessage: function (data) {
-        var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
-            return '&#' + i.charCodeAt(0) + ';';
-        });
-        $("#txtChatLog").append('<div class="item"><span class="stranger">Stranger: </span><span class="msg">' + encodedStr + '</span></div>');
-        updateScroll();
-    },
-    addMeMessage: function (data) {
-        var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
-            return '&#' + i.charCodeAt(0) + ';';
-        });
-        $("#txtChatLog").append('<div class="item"><span class="you">You: </span><span class="msg">' + encodedStr + '</span></div>');
-        updateScroll();
-    }
-};
-
 function updateScroll() {
-    var element = document.getElementById("txtChatLog");
+    const element = document.getElementById("txtChatLog");
     element.scrollTop = element.scrollHeight;
 }
 
@@ -617,10 +438,10 @@ function isBreakpoint(alias) {
 }
 
 $(window).resize(function () {
-    if (page === "video"){
+    if (isVideo) {
         resizeVideos();
     }
-    if (page === "videos" || page === "text"){
+    if (isVideo || isText) {
         updateScroll();
     }
 });

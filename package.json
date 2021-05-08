@@ -1,6 +1,6 @@
 {
   "name": "omeglit",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Omegle clone experiment from when Omegle still worked with Flash Player",
   "keywords": [
     "omegle",
@@ -12,6 +12,6 @@
   "contributors": [],
   "dependencies": {
     "express": "4.17.1",
-    "socket.io": "2.4.1"
+    "socket.io": "4.0.2"
   }
 }

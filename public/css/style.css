@@ -1,6 +1,6 @@
 /* 
     Created on : 17-may-2016, 11:43:28
-    Author     : juanjo
+    Author     : cypherbits
 */
 
 body{
@@ -9,8 +9,8 @@ body{
 
 noscript{
     position:fixed;
-    top:0px;
-    left:0px;
+    top:0;
+    left:0;
     width:100%;
     height:100%;
     background-color: whitesmoke;
@@ -18,14 +18,6 @@ noscript{
 
 #header{
     z-index: 10;
-    margin-top:-20px;
-}
-
-#chatArea{
-    border:solid 1px grey;
-    border-top-left-radius:1em;
-    border-top-right-radius:1em;
-    background-color:#FFFFFF;
 }
 
 #txtChatLog{
@@ -44,43 +36,29 @@ noscript{
 }
 
 #txtChatLog .item span.you{
-    color:blue;
+    color: #0000c6;
 }
 
 #txtChatLog .item span.stranger{
-    color:red;
+    color: #db0000;
 }
 
 #localVideo, #remoteVideo{
     width: 100%;
-    background-color: #333;
+    background-color: #111;
+    border-radius: .25em;
 }
 
 #txtNewMessage{
-    width: 100%;
-    height: 100%;
     resize: none;
 }
 
-.nopadding{
-    padding:0px;
-}
-
 .nomargin{
-    margin:0px;
-}
-
-.adult-text h2, .adult-text h1 a{
-    color:#c71c22;
-}
-
-.btn-adult{
-    background-color: #c71c22 !important;
-    color:#FFF !important;
+    margin:0;
 }
 
 #divHover{
-    position:absolute; top:0px; background-color:#FFF; background-color:rgba(255,255,255,0.9); width: 100%; height: 100%;
+    position:absolute; top:0; background-color:#FFF; width: 100%; height: 100%; right: 0;
 }
 
 #divOrigVideo2.mobile{
@@ -88,18 +66,23 @@ noscript{
 }
 
 #leftColumn{
-    border-right: solid 1px grey; height: 100%; background-color:whitesmoke;
+    height: 100%; background-color:#4a4a4a; border-top-left-radius: .25em; border-bottom-left-radius: .25em;
 }
 
 #leftColumn.mobile{
     height: auto !important;
 }
 
-#divOrigVideo1, #divOrigVideo2{
-    
+#divInput{
+    position: absolute; bottom: .1em;left: .5em;right: .5em;
 }
 
-#divInput{
-    position: absolute; bottom: .5em;left: .5em;right: .5em;height: 5em;
-    background-color:whitesmoke;
+/**
+Custom boostrap
+ */
+h1, h2, .h1, .h2, a{
+    color: #006cac;
+}
+h1 small{
+    color: #6c6c6c;
 }
