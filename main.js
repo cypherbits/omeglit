@@ -1,31 +1,54 @@
-const args = process.argv.slice(2);
-console.log('app arguments: ', args);
+/** CONFIG AND SERVER SETUP */
+const SERVER_PORT = 8080;
+const FS_PRIVATE_KEY = "./privkey.pem";
+const FS_CERTIFICATE = "./cert.pem";
+const FS_CACHAIN = "./chain.pem";
 
+const args = process.argv.slice(2);
+console.debug('app arguments: ', args);
+
+const express = require("express");
+const expressApp = express();
 let server;
-if (args.length !== 0 && args[0] === "--localhost"){
-    console.log("using localhost configuration");
-    const express = require("express");
-    const app = express();
-    app.use(express.static('public'));
-    server = require("http").Server(app);
-}else{
-    const fs = require('fs');
-    const expressApp = require("express")();
-    const https = require("https");
-    server = https.createServer({
-        key: fs.readFileSync('./privkey.pem'),
-        cert: fs.readFileSync('./cert.pem'),
-        ca: fs.readFileSync('./chain.pem')
-    }, expressApp);
+
+if (args.includes("--help")) {
+    const txtHelp = " == Omeglit v2 server == \n" +
+        " node main.js [--help] [--with-public-server] [--localhost]\n" +
+        "Command options:\n" +
+        " --help Display this help \n" +
+        " --with-public-server Serve http public folder too\n" +
+        " --localhost Localhost mode (no SSL)";
+    console.info(txtHelp);
+    process.exit(0);
 }
 
+if (args.includes("--with-public-server")) {
+    expressApp.use(express.static('public'));
+    console.info("Running as a public HTTP server on port " + SERVER_PORT);
+}
+
+if (args.includes("--localhost")) {
+    server = require("http").Server(expressApp);
+    console.info("Running as a localhost configuration, no SSL");
+} else {
+    const fs = require('fs');
+    if (fs.existsSync(FS_PRIVATE_KEY) && fs.existsSync(FS_CERTIFICATE) && fs.existsSync(FS_CACHAIN)) {
+        const https = require("https");
+        server = https.createServer({
+            key: fs.readFileSync(FS_PRIVATE_KEY),
+            cert: fs.readFileSync(FS_CERTIFICATE),
+            ca: fs.readFileSync(FS_CACHAIN)
+        }, expressApp);
+        console.info("Running as a remote server configuration");
+    } else {
+        console.error("Fatal error: check if SSL certificates files exists (" + FS_PRIVATE_KEY + ", " + FS_CERTIFICATE + ", " + FS_CACHAIN + ")");
+        process.exit(1);
+    }
+}
 
 const io = require("socket.io")(server);
 
-/** CONFIG */
-const PORT = 8080;
-
-/** GLOBAL VARIABLES */
+/** GLOBAL CHAT VARIABLES */
 
 let lonelyClientTxt = {};
 let allClientsTxt = {};
@@ -124,7 +147,7 @@ function newOmeglit(url, lonely, allClients) {
 
                 if (allClients[socket.id] !== undefined && allClients[socket.id].partner) {
 
-                    if (allClients[allClients[socket.id].partner] !== undefined){
+                    if (allClients[allClients[socket.id].partner] !== undefined) {
                         allClients[allClients[socket.id].partner].emit('newMessage', data);
                     }
 
@@ -143,6 +166,6 @@ function newOmeglit(url, lonely, allClients) {
 }
 
 
-server.listen(PORT, "0.0.0.0", function () {
-    console.log("Server started on port " + PORT);
+server.listen(SERVER_PORT, "0.0.0.0", function () {
+    console.log("Server started on port " + SERVER_PORT);
 });
