@@ -46,7 +46,13 @@ if (args.includes("--localhost")) {
     }
 }
 
-const io = require("socket.io")(server);
+const io = require("socket.io")(server,
+    {
+        cors: {
+            origin: /omeglit\\.com$/,
+            methods: ["GET", "POST"]
+        }
+    });
 
 /** GLOBAL CHAT VARIABLES */
 
