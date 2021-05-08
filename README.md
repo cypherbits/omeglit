@@ -18,6 +18,21 @@ Version 2.0 vs 1.0:
 2. If you run on a server, you need https for this to work. You need to copy your domain certificates to main folder as omeglo needs to read the Certificate Chain (CA), Certificate, and Private Key. I did this with Let's Encrypt certbot.
 3. Start the app with `node main.js [--localhost]`.
 
+### Command line --help
+
+**== Omeglit v2 server ==**
+
+`node main.js [--help] [--with-http] [--localhost]`
+
+Command line server start options:
+
+`--help` Display this help
+
+`--with-public-server` Serve http public folder too
+
+`--localhost` Localhost mode (no SSL)
+
+
 ### Licenced under
 **Creative Commons 4.0 Attribution-NonCommercial-ShareAlike 4.0 International**
 
