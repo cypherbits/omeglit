@@ -20,7 +20,10 @@
     <div class="container">
         <div class="mt-2">
             <div class="float-left">
-                <h1>Omeglit <small class="d-none d-md-inline-block" style="font-size: 1.6rem;">Talk to strangers! (Beta)</small></h1>
+                <h1>
+                    Omeglit <small class="d-none d-md-inline-block" style="font-size: 1.6rem;">Talk to strangers!
+                    (Beta)</small>
+                </h1>
             </div>
 
             <div class="float-right">
@@ -30,29 +33,23 @@
         </div>
         <div class="card mt-3 shadow-sm">
             <div class="card-body">
+                <h5>About Omeglit</h5>
                 <p>
-                    Omeglit is a great way to meet new friends all over the world. When you use Omeglit, we pick someone
-                    else at random and let you talk one-on-one.
-                    To help you stay safe we use HTTPS, chats are anonymous, we do not store text or video and the data
-                    sent to your partner is encrypted because we use WebRTC. <br>
-                    Users can report bad behaviours and the system will send us a screenshot of whats happening (future,
-                    WIP).
+                    Omeglit is a great way to meet new friends all over the world. Just choose an option (text chat or
+                    video chat) and we will pick someone randomly
+                    letting you talk one-to-one.
                 </p>
-                <!--                        <p>
-                                            If you prefer, you can add your interests, and Omeglit will look for someone who's into some of the same things as you instead
-                                            of someone completely random.
-                                        </p>-->
+                <h5>Privacy and security</h5>
                 <p>
-                    By using Omeglit, you accept the terms at the bottom. You must be 18+ or 13+ with parental
-                    permission.
+                    Omeglit uses HTTPS for connections with our server and End-to-End encryption with WebRTC so we do not process and/or store your chat text or video/audio chats.
                 </p>
                 <p>
-                    Because we use direct WebRTC encrypted connection between browsers, we do not moderate live video or
-                    text chats. Users can and should report bad behaviour.
+                    Keep in mind modern WebRTC technology means end-to-end encryption but it means your partner can get your IP address.
+                    Strangers could record your webcam too (as in Omegle and any other videochat apps).
                 </p>
+                <h5>Tech and code</h5>
                 <p>
-                    Remember: recording strangers without permission is not only immoral but can be illegal in your
-                    country. We will provide a way to track recordings in the future.
+                    <i class="bi bi-github"></i> GitHub Open Source project: <a href="https://github.com/cypherbits/omeglit">GitHub</a>
                 </p>
             </div>
         </div>
@@ -60,15 +57,15 @@
         <div class="card mt-3 shadow-sm">
             <div class="card-body">
                 <div class="col-md-12">
-                    <h3>Start chatting</h3>
+                    <h3 class="text-center text-muted">Choose a chat and enjoy!</h3>
                     <hr>
                 </div>
 
                 <div class="row">
                     <div class="col text-center">
-                        <h4 style="color: black;">Clean version (13+)</h4>
+                        <h4 class="text-dark">Clean version (13+)</h4>
 
-                        <div class="btn-group btn-group-lg" role="group">
+                        <div class="btn-group btn-group-lg mt-2" role="group">
                             <button id="btnCleanText" value="Text" class="btn btn-dark" disabled>
                                 <i class="bi bi-chat-square-text-fill"></i> Text
                             </button>
@@ -80,7 +77,7 @@
                     <div class="col text-center">
                         <h4 class="text-danger">Adult version (18+)</h4>
 
-                        <div class="btn-group btn-group-lg" role="group">
+                        <div class="btn-group btn-group-lg mt-2" role="group">
                             <button id="btnNomoText" value="Text" class="btn btn-dark" disabled>
                                 <i class="bi bi-chat-square-text-fill"></i> Text
                             </button>
@@ -89,7 +86,7 @@
                             </button>
                         </div>
                         <p class="text-muted">
-                            <br> <small>Warning: This section can contain explicit sexual behavior</small>
+                            <small>Warning: This section can contain explicit sexual behavior</small>
                         </p>
 
                         <div id="divHover">
@@ -131,8 +128,8 @@
         font-weight: bold;
         color: #D30000;
         position: fixed;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         height: 100%;
         width: 100%;
     }
@@ -150,7 +147,9 @@
 <script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
 <!--<script src="js/bootstrap.min.js" type="text/javascript"></script>-->
 <script src="js/adapterv8.js" type="text/javascript"></script>
-<script src="https://cdn.socket.io/4.0.2/socket.io.min.js" integrity="sha384-Bkt72xz1toXkj/oEiOgkQwWKbvNYxTNWMqdon3ejP6gwq53zSo48nW5xACmeDV0F" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.0.2/socket.io.min.js"
+        integrity="sha384-Bkt72xz1toXkj/oEiOgkQwWKbvNYxTNWMqdon3ejP6gwq53zSo48nW5xACmeDV0F"
+        crossorigin="anonymous"></script>
 <script src="js/omeglo.js" type="text/javascript"></script>
 <script src="js/ads.js" type="text/javascript"></script>
 <script type="text/javascript">
