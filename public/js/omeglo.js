@@ -3,7 +3,7 @@
 const pageTitle = "Omeglit: Talk to strangers and meet new friends";
 const newMessageText = "(Unread) ";
 
-let URLConnection = "omeglit.com";
+let URLConnection = "omeglit.com:8080";
 let URLProtocol = "https://";
 
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
