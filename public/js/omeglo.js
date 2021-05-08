@@ -248,7 +248,7 @@ function prepareChat() {
 
         //console.log("remote video stream add");
 
-        //resizeVideos();
+        resizeVideos();
     }
 
     function receiveChannelCallback(event) {
@@ -377,7 +377,7 @@ function prepareChat() {
 function prepareCamera() {
 
     $(window).resize(function () {
-        //resizeCamera();
+        resizeCamera();
     });
 
     function resizeCamera() {
@@ -390,7 +390,7 @@ function prepareCamera() {
         }
     }
 
-    //resizeCamera();
+    resizeCamera();
 
     chatLog.clear();
     chatLog.addSystemMessage("Enable access to your webcam");
@@ -439,7 +439,7 @@ function isBreakpoint(alias) {
 
 $(window).resize(function () {
     if (isVideo) {
-        //resizeVideos();
+        resizeVideos();
     }
     if (isVideo || isText) {
         updateScroll();
