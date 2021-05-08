@@ -36,11 +36,11 @@ noscript{
 }
 
 #txtChatLog .item span.you{
-    color:blue;
+    color: #0000c6;
 }
 
 #txtChatLog .item span.stranger{
-    color:red;
+    color: #db0000;
 }
 
 #localVideo, #remoteVideo{

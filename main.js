@@ -13,7 +13,7 @@ let server;
 
 if (args.includes("--help")) {
     const txtHelp = " == Omeglit v2 server == \n" +
-        " node main.js [--help] [--with-public-server] [--localhost]\n" +
+        " node main.js [--help] [--with-http] [--localhost]\n" +
         "Command options:\n" +
         " --help Display this help \n" +
         " --with-public-server Serve http public folder too\n" +
@@ -22,7 +22,7 @@ if (args.includes("--help")) {
     process.exit(0);
 }
 
-if (args.includes("--with-public-server")) {
+if (args.includes("--with-http")) {
     expressApp.use(express.static('public'));
     console.info("Running as a public HTTP server on port " + SERVER_PORT);
 }
