@@ -84,7 +84,7 @@ $(document).ready(function () {
         $("#divHover").hide();
     });
 
-    $(window).focus(function() {
+    $(window).focus(function () {
         document.title = pageTitle;
     });
 
@@ -248,7 +248,7 @@ function prepareChat() {
 
         //console.log("remote video stream add");
 
-        resizeVideos();
+        //resizeVideos();
     }
 
     function receiveChannelCallback(event) {
@@ -349,7 +349,7 @@ function prepareChat() {
 
     function disconnect() {
 
-        if (isVideo){
+        if (isVideo) {
             const remoteVideo = document.querySelector('#remoteVideo');
             remoteVideo.src = null;
         }
@@ -384,9 +384,11 @@ function prepareCamera() {
         if (isBreakpoint("xs")) {
             $("#divOrigVideo2").addClass("mobile");
             $("#leftColumn").addClass("mobile");
+            $("#txtChatLog").addClass("mobile");
         } else {
             $("#divOrigVideo2").removeClass("mobile");
             $("#leftColumn").removeClass("mobile");
+            $("#txtChatLog").removeClass("mobile");
         }
     }
 
@@ -439,20 +441,20 @@ function isBreakpoint(alias) {
 
 $(window).resize(function () {
     if (isVideo) {
-        resizeVideos();
+        //resizeVideos();
     }
     if (isVideo || isText) {
         updateScroll();
     }
 });
 
-function resizeVideos() {
-    if ($("#remoteVideo").width() * 2 > $("#leftColumn").height() && !isBreakpoint("xs")) {
-        $("#remoteVideo").height($("#leftColumn").height() / 2);
-        $("#localVideo").height($("#leftColumn").height() / 2);
-    } else {
-        $("#remoteVideo").height($("#remoteVideo").width());
-        $("#localVideo").height($("#localVideo").width());
-    }
-
-}
+// function resizeVideos() {
+//     if ($("#remoteVideo").width() * 2 > $("#leftColumn").height() && !isBreakpoint("xs")) {
+//         $("#remoteVideo").height($("#leftColumn").height() / 2);
+//         $("#localVideo").height($("#leftColumn").height() / 2);
+//     } else {
+//         $("#remoteVideo").height($("#remoteVideo").width());
+//         $("#localVideo").height($("#localVideo").width());
+//     }
+//
+// }
