@@ -449,7 +449,7 @@ $(window).resize(function () {
 });
 
 function resizeVideos() {
-    if ($("#remoteVideo").width() * 2 > $("#leftColumn").height() && !isBreakpoint("xs")) {
+    if (!isBreakpoint("xs") && ($("#remoteVideo").width() * 2) > ($("#leftColumn").height() / 2) ) {
         $("#remoteVideo").height($("#leftColumn").height() / 2);
         $("#localVideo").height($("#leftColumn").height() / 2);
     } else {
