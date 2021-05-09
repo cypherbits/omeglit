@@ -84,7 +84,7 @@ $(document).ready(function () {
         $("#divHover").hide();
     });
 
-    $(window).focus(function() {
+    $(window).focus(function () {
         document.title = pageTitle;
     });
 
@@ -349,7 +349,7 @@ function prepareChat() {
 
     function disconnect() {
 
-        if (isVideo){
+        if (isVideo) {
             const remoteVideo = document.querySelector('#remoteVideo');
             remoteVideo.src = null;
         }
@@ -384,9 +384,11 @@ function prepareCamera() {
         if (isBreakpoint("xs")) {
             $("#divOrigVideo2").addClass("mobile");
             $("#leftColumn").addClass("mobile");
+            $("#txtChatLog").addClass("mobile");
         } else {
             $("#divOrigVideo2").removeClass("mobile");
             $("#leftColumn").removeClass("mobile");
+            $("#txtChatLog").removeClass("mobile");
         }
     }
 
@@ -451,8 +453,7 @@ function resizeVideos() {
         $("#remoteVideo").height($("#leftColumn").height() / 2);
         $("#localVideo").height($("#leftColumn").height() / 2);
     } else {
-        $("#remoteVideo").height($("#remoteVideo").width());
+        $("#remoteVideo").height($("#leftColumn").height());
         $("#localVideo").height($("#localVideo").width());
     }
-
 }
