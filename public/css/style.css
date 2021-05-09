@@ -81,9 +81,9 @@ noscript {
     border-bottom-left-radius: .25em;
 }
 
-#leftColumn.mobile {
-    display: contents;
-}
+/*#leftColumn.mobile {*/
+/*    display: contents;*/
+/*}*/
 
 #leftColumn.mobile, #txtChatLog.mobile {
     height: 50% !important;
