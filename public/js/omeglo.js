@@ -35,7 +35,10 @@ $(document).ready(function () {
     socketNUsers = io.connect(URLProtocol + URLConnection);
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
-        //console.log(data.nusers);
+        $("#txtTextUsers").html(data.txtUsers);
+        $("#txtVideoUsers").html(data.videoUsers);
+        $("#txtText18Users").html(data.txt18Users);
+        $("#txtVideo18Users").html(data.video18Users);
 
         $("#btnCleanText").prop("disabled", false);
         $("#btnCleanVideo").prop("disabled", false);

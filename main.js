@@ -74,7 +74,7 @@ function countAllUsers() {
 }
 
 function emitUserCount() {
-    io.emit("nusers", {nusers: countAllUsers()});
+    io.emit("nusers", {nusers: countAllUsers(), txtUsers: Object.keys(allClientsTxt).length, txt18Users: Object.keys(allClientsTxt18).length, videoUsers: Object.keys(allClientsVideo).length, video18Users: Object.keys(allClientsVideo18).length});
 }
 
 io.on('connection', function (socket) {
