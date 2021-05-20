@@ -49,7 +49,7 @@ if (args.includes("--localhost")) {
 const io = require("socket.io")(server,
     {
         cors: {
-            origin: /omeglit\\.com$/,
+            origin: ["https://omeglit.com", "https://www.omeglit.com"],
             methods: ["GET", "POST"]
         }
     });
