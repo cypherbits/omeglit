@@ -129,7 +129,6 @@ function prepareChat() {
     if (is18) {
         $("#btnNewChat").removeClass("btn-primary").addClass("btn-danger");
         $("#btnSendMessage").removeClass("btn-primary").addClass("btn-danger");
-        $("body").addClass("text-danger");
     }
 
     $("#btnNewChat").prop("disabled", true);
@@ -266,7 +265,9 @@ function prepareChat() {
     function handleReceiveMessage(event) {
         //console.log("new MESSAGE: " + event.data);
         chatLog.addStrangerMessage(event.data);
-        document.title = newMessageText + pageTitle;
+        if (!document.hasFocus()) {
+            document.title = newMessageText + pageTitle;
+        }
     }
 
     function onICECandidate(ice) {
