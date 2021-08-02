@@ -32,8 +32,14 @@ Command line server start options:
 
 `--localhost` Localhost mode (no SSL)
 
+## Donate
+https://ko-fi.com/cypherbits
 
-### Licenced under
+Monero address:
+`4BCveGZaPM7FejGkhFyHgtjVXZw52RrYxKs7znZdmnWLfB3xDKAW6SkYZPpNhqBvJA8crE8Tug8y7hx8U9KAmq83PwLtVLe`
+
+
+## Licenced under
 **Creative Commons 4.0 Attribution-NonCommercial-ShareAlike 4.0 International**
 
 Legal text: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
