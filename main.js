@@ -16,7 +16,7 @@ if (args.includes("--help")) {
         " node main.js [--help] [--with-http] [--localhost]\n" +
         "Command options:\n" +
         " --help Display this help \n" +
-        " --with-public-server Serve http public folder too\n" +
+        " --with-http Serve http public folder too\n" +
         " --localhost Localhost mode (no SSL)";
     console.info(txtHelp);
     process.exit(0);
