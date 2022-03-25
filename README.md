@@ -7,17 +7,22 @@ This is a Omegle clone experiment from when Omegle still worked with Flash Playe
 1. Configure .env and cloudflare.ini file (if behind cloudflare)
 
 2. Starting
-docker-compose up -d [--build for rebuilding]
 
+`docker-compose up -d [--build for rebuilding]
+`
 3. Stopping
-docker-compose down
 
-4. Generate certificates
-docker compose exec -it certbot_omeglit certbot certonly --webroot --webroot-path /var/www/certbot/ --dns-cloudflare --dns-cloudflare-credentials /root/cloudflare.ini --dns-cloudflare-propagation-seconds 10 -d omeglit.com
+`docker-compose down
+`
+4. Generate certificates manually
+
+`docker-compose run --rm certbot_cf certonly --dns-cloudflare --dns-cloudflare-credentials /root/cloudflare.ini --dns-cloudflare-propagation-seconds 10 -d omeglit.com -d www.omeglit.com
+`
 
 5. Renew certificates with a cronjob
-docker compose exec -it certbot_omeglit certbot renew
 
+`docker-compose run --rm certbot_cf renew --dry-run
+`
 ### Command line local --help
 
 **== Omeglit v2 server ==**

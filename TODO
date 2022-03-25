@@ -1,2 +1,4 @@
+- nginx + node + certbot
+
 - Handle disconnect when partner found but not connected.
 - Handle ICE STUN cannot connect (VPNs etc)

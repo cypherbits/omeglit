@@ -10,7 +10,7 @@ services:
       - ./public:/usr/share/nginx/html:ro
       - ~/omeglit_${TARGET}/secrets:/opt/omeglit/secrets:ro
       - ./docker/${TARGET}/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ~/omeglit_${TARGET}/certbot/www:/var/www/certbot/:ro
+ #     - ~/omeglit_${TARGET}/certbot/www:/var/www/certbot/:ro
     ports:
       - "80:80"
       - "443:443"
@@ -49,5 +49,5 @@ services:
       - no-new-privileges
     volumes:
       - ~/omeglit_${TARGET}/secrets:/etc/letsencrypt/live
-      - ~/omeglit_${TARGET}/certbot/www/:/var/www/certbot/:rw
+#      - ~/omeglit_${TARGET}/certbot/www/:/var/www/certbot/:rw
       - ./cloudflare.ini:/root/cloudflare.ini:ro
