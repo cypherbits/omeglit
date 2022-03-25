@@ -1,8 +1,8 @@
 /** CONFIG AND SERVER SETUP */
 const SERVER_PORT = 8080;
-const FS_PRIVATE_KEY = "./secrets/omeglit.com/privkey.pem";
-const FS_CERTIFICATE = "./secrets/omeglit.com/cert.pem";
-const FS_CACHAIN = "./secrets/omeglit.com/chain.pem";
+const FS_PRIVATE_KEY = "/etc/letsencrypt/live/omeglit.com/privkey.pem";
+const FS_CERTIFICATE = "/etc/letsencrypt/live/omeglit.com/cert.pem";
+const FS_CACHAIN = "/etc/letsencrypt/live/omeglit.com/chain.pem";
 
 const args = process.argv.slice(2);
 console.debug('app arguments: ', args);
