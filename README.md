@@ -16,13 +16,17 @@ This is a Omegle clone experiment from when Omegle still worked with Flash Playe
 `
 4. Generate certificates manually
 
-`docker-compose run --rm certbot_cf certonly --dns-cloudflare --dns-cloudflare-credentials /root/cloudflare.ini --dns-cloudflare-propagation-seconds 10 -d omeglit.com -d www.omeglit.com
-`
+`docker-compose run --rm certbot_cf certonly --dns-cloudflare --dns-cloudflare-credentials /root/cloudflare.ini --dns-cloudflare-propagation-seconds 10 -d omeglit.com -d www.omeglit.com`
 
 5. Renew certificates with a cronjob
 
-`docker-compose run --rm certbot_cf renew --dry-run
-`
+`docker-compose run --rm certbot_cf renew`
+
+Install cronjob on host for every month:
+
+crontab -l | { cat; echo "1 1 1 * * docker-compose run --rm certbot_cf renew"; } | crontab -
+
+
 ### Command line local --help
 
 **== Omeglit v2 server ==**
