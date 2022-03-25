@@ -1,8 +1,8 @@
 /** CONFIG AND SERVER SETUP */
 const SERVER_PORT = 8080;
-const FS_PRIVATE_KEY = "./privkey.pem";
-const FS_CERTIFICATE = "./cert.pem";
-const FS_CACHAIN = "./chain.pem";
+const FS_PRIVATE_KEY = "./secrets/privkey.pem";
+const FS_CERTIFICATE = "./secrets/cert.pem";
+const FS_CACHAIN = "./secrets/chain.pem";
 
 const args = process.argv.slice(2);
 console.debug('app arguments: ', args);
