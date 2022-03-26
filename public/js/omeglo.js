@@ -208,6 +208,9 @@ function prepareChat() {
 
     });
 
+    socketControl.on("aborted", function (data) {
+        disconnect();
+    });
 
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
