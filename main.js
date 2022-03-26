@@ -90,7 +90,6 @@ newOmeglit("/video18", lonelyClientVideo18, allClientsVideo18);
 function newOmeglit(url, lonely, allClients) {
     const ioPath = io.of(url);
     ioPath.on('connection', function (socket) {
-        //console.log(socket.id, ' just came to website');
         socket.on('disconnect', function () {
             if (allClients[socket.id]) {
                 if (lonely.id === socket.id) {
@@ -104,8 +103,6 @@ function newOmeglit(url, lonely, allClients) {
 
                 emitUserCount();
 
-                //console.log(socket.id, ' disconnected!');
-                //console.log(countAllUsers() + ' users online');
             } else {
                 console.log('A user that never registered left');
             }
