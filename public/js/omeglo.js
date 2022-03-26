@@ -283,10 +283,12 @@ function prepareChat() {
 
     function onCreateSessionDescriptionError(error) {
         console.error('Failed to create session description: ' + error.toString());
+        disconnect();
     }
 
     function onCreateAnswerError(error) {
         console.error('Failed to create session answer: ' + error.toString());
+        disconnect();
     }
 
     function gotAnswer(data) {
@@ -312,7 +314,7 @@ function prepareChat() {
         const readyState = sendChannel.readyState;
         console.log('Send channel state is: ' + readyState);
         if (readyState === 'open') {
-            //habilitar botones para enviar
+            //Enable send buttons
             chatLog.clear();
             chatLog.addSystemMessage("You're now chatting with a random stranger. Say hi!");
 
@@ -325,7 +327,7 @@ function prepareChat() {
             $("#btnSendMessage").prop("disabled", false);
             $("#txtNewMessage").prop("disabled", false);
         } else {
-            //deshabilitar botones para enviar
+            //Disable send buttons
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
             $("#btnNewChat").prop("disabled", false);
