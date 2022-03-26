@@ -212,6 +212,10 @@ function prepareChat() {
         disconnect();
     });
 
+    socketControl.on("disconnect", function (data) {
+        disconnect();
+    });
+
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
             case "new-offer":
