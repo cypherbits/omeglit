@@ -205,12 +205,7 @@ function prepareChat() {
                 onCreateSessionDescriptionError
             );
 
-            $("#btnNewChat").html("Disconnect");
-            $("#btnNewChat").unbind().on("click", function () {
-                chatLog.addSystemMessage("You have disconnected.");
-                disconnect();
-            });
-            $("#btnNewChat").prop("disabled", false);
+            enableDisconnect();
         }
 
     });
@@ -253,6 +248,15 @@ function prepareChat() {
                 break;
         }
     });
+
+    function enableDisconnect(){
+        $("#btnNewChat").html("Disconnect");
+        $("#btnNewChat").unbind().on("click", function () {
+            chatLog.addSystemMessage("You have disconnected.");
+            disconnect();
+        });
+        $("#btnNewChat").prop("disabled", false);
+    }
 
     function receiveStreamCallback(e) {
         //remoteVideo.srcObject = e.stream;
