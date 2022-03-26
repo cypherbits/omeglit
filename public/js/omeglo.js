@@ -379,6 +379,7 @@ function prepareChat() {
         if (isVideo) {
             const remoteVideo = document.querySelector('#remoteVideo');
             remoteVideo.src = null;
+            remoteVideo.load();
         }
 
         if (sendChannel !== null){
