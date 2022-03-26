@@ -257,13 +257,21 @@ function prepareChat() {
     function receiveChannelCallback(event) {
         console.log("channel received");
 
-        sendChannel = event.channel;
+        if (sendChannel === null || (sendChannel.readyState !== 'open')){
+            console.log("channel received and set");
 
-        sendChannel.onopen = onSendChannelStateChange;
-        sendChannel.onclose = onSendChannelStateChange;
-        //Chrome workaround
-        sendChannel.onclosing = onSendChannelStateChange;
-        sendChannel.onmessage = handleReceiveMessage;
+            sendChannel = event.channel;
+
+            sendChannel.onopen = onSendChannelStateChange;
+            sendChannel.onclose = onSendChannelStateChange;
+            //Chrome workaround
+            sendChannel.onclosing = onSendChannelStateChange;
+            sendChannel.onmessage = handleReceiveMessage;
+        }else{
+            console.log("channel received NOT set because there is an existing one and in progress");
+
+        }
+
     }
 
     function handleReceiveMessage(event) {
