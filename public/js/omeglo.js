@@ -205,8 +205,9 @@ function prepareChat() {
                 onCreateSessionDescriptionError
             );
 
-            enableDisconnect();
         }
+
+        enableDisconnect();
 
     });
 
