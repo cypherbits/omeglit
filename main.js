@@ -95,7 +95,7 @@ function newOmeglit(url, lonely, allClients) {
                 if (lonely.id === socket.id) {
                     lonely = {};
                 }
-                if (allClients[allClients[socket.id].partner]) {
+                if (allClients[socket.id].partner) {
                     io.to(allClients[socket.id].partner).emit('disconnect');
                 }
 
