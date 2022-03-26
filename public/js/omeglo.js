@@ -208,10 +208,6 @@ function prepareChat() {
 
     });
 
-    socketControl.on("disconnect", function (data) {
-        chatLog.addSystemMessage("Stranger have disconnected.");
-        disconnect();
-    });
 
     socketControl.on("newMessage", function (data) {
         switch (data.type) {
