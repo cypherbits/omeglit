@@ -375,9 +375,13 @@ function prepareChat() {
             remoteVideo.src = null;
         }
 
-        sendChannel.close();
+        if (sendChannel !== null){
+            sendChannel.close();
+        }
 
-        localConnection.close();
+        if (localConnection !== null){
+            localConnection.close();
+        }
 
         sendChannel = null;
         localConnection = null;
