@@ -274,11 +274,13 @@ function prepareChat() {
     }
 
     function onICECandidate(ice) {
-        console.dir("sending new ICE candidate: " + ice.candidate);
-        socketControl.emit('newMessage', {
-            type: 'new-ice',
-            msg: JSON.stringify(ice.candidate)
-        });
+        if (ice.candidate !== null){
+            console.dir("sending new ICE candidate: " + ice.candidate);
+            socketControl.emit('newMessage', {
+                type: 'new-ice',
+                msg: JSON.stringify(ice.candidate)
+            });
+        };
     }
 
     function onCreateSessionDescriptionError(error) {
