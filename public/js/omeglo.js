@@ -120,6 +120,11 @@ const chatLog = {
 
 function prepareChat() {
 
+    if (isBreakpoint("xs")){
+        $("#btnNewChat").css("max-width", "5rem");
+        $("#btnSendMessage").css("max-width", "5rem");
+    }
+
     //    var videoTracks = localStream.getVideoTracks();
 //    var audioTracks = localStream.getAudioTracks();
 //    if (videoTracks.length > 0) {
