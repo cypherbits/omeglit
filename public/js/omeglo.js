@@ -341,7 +341,7 @@ function prepareChat() {
             $("#btnNewChat").prop("disabled", false);
             $("#btnSendMessage").prop("disabled", false);
             $("#txtNewMessage").prop("disabled", false);
-        } else {
+        } else if (readyState !== 'connecting') {
             //Disable send buttons
             console.log("not data channel open");
             chatLog.addSystemMessage("Stranger have disconnected.");
