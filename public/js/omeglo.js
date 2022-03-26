@@ -204,6 +204,13 @@ function prepareChat() {
                 gotDescription,
                 onCreateSessionDescriptionError
             );
+
+            $("#btnNewChat").html("Disconnect");
+            $("#btnNewChat").unbind().on("click", function () {
+                chatLog.addSystemMessage("You have disconnected.");
+                disconnect();
+            });
+            $("#btnNewChat").prop("disabled", false);
         }
 
     });
@@ -333,12 +340,6 @@ function prepareChat() {
             chatLog.clear();
             chatLog.addSystemMessage("You're now chatting with a random stranger. Say hi!");
 
-            $("#btnNewChat").html("Disconnect");
-            $("#btnNewChat").unbind().on("click", function () {
-                chatLog.addSystemMessage("You have disconnected.");
-                disconnect();
-            });
-            $("#btnNewChat").prop("disabled", false);
             $("#btnSendMessage").prop("disabled", false);
             $("#txtNewMessage").prop("disabled", false);
         } else if (readyState !== 'connecting') {
