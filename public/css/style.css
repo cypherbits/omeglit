@@ -75,12 +75,20 @@ noscript {
     right: .5em;
 }
 
-#btnNewChat, #btnSendMessage{
+#btnNewChat.btn-primary, #btnSendMessage.btn-primary{
     background-color: #1d35bf;
 }
 
-#btnNewChat:hover, #btnSendMessage:hover{
+#btnNewChat.btn-primary:hover, #btnSendMessage.btn-primary:hover{
     background-color: #1a2d9d;
+}
+
+#btnNewChat.btn-danger, #btnSendMessage.btn-danger{
+    background-color: #bf1d1d;
+}
+
+#btnNewChat.btn-danger:hover, #btnSendMessage.btn-danger:hover{
+    background-color: #9d1717;
 }
 
 
