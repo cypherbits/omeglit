@@ -1,6 +1,6 @@
 'use strict';
 
-const pageTitle = "Omeglit: Talk to strangers and meet new friends";
+let pageTitle;
 const newMessageText = "(Unread) ";
 
 let URLConnection = "omeglit.com:8080";
@@ -32,6 +32,8 @@ const iceServers = {
 
 $(document).ready(function () {
 
+    pageTitle = document.title;
+
     socketNUsers = io.connect(URLProtocol + URLConnection);
     socketNUsers.on("nusers", function (data) {
         $("#txtNUsers").html(data.nusers);
@@ -42,8 +44,6 @@ $(document).ready(function () {
 
         $("#btnCleanText").prop("disabled", false);
         $("#btnCleanVideo").prop("disabled", false);
-        $("#btnNomoText").prop("disabled", false);
-        $("#btnNomoVideo").prop("disabled", false);
     });
 
     $("#btnCleanText").on("click", function () {
@@ -83,8 +83,15 @@ $(document).ready(function () {
         });
     });
 
-    $("#btnHover").on("click", function () {
-        $("#divHover").hide();
+    $("#check18y").change(function() {
+        if (this.checked) {
+            console.log("checked");
+            $("#btnNomoText").prop("disabled",false);
+            $("#btnNomoVideo").prop("disabled",false);
+        } else {
+            $("#btnNomoText").prop("disabled",true);
+            $("#btnNomoVideo").prop("disabled",true);
+        }
     });
 
     $(window).focus(function () {

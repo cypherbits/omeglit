@@ -16,10 +16,6 @@ noscript {
     background-color: whitesmoke;
 }
 
-#header {
-    z-index: 10;
-}
-
 #txtChatLog {
     padding: 0.4em;
     overflow-y: auto;
@@ -36,11 +32,11 @@ noscript {
 }
 
 #txtChatLog .item span.you {
-    color: #0000c6;
+    color: #1d35bf;
 }
 
 #txtChatLog .item span.stranger {
-    color: #db0000;
+    color: #bf1d1d;
 }
 
 #localVideo, #remoteVideo {
@@ -51,20 +47,6 @@ noscript {
 
 #txtNewMessage {
     resize: none;
-}
-
-.nomargin {
-    margin: 0;
-}
-
-#divHover {
-    position: absolute;
-    top: 0;
-    background-color: #FFF;
-    width: 100%;
-    height: 100%;
-    right: 0;
-    opacity: 0.95;
 }
 
 #divOrigVideo2.mobile {
@@ -82,10 +64,6 @@ noscript {
     border-bottom-left-radius: .25em;
 }
 
-/*#leftColumn.mobile {*/
-/*    display: contents;*/
-/*}*/
-
 #leftColumn.mobile, #txtChatLog.mobile {
     height: 50% !important;
 }
@@ -97,13 +75,18 @@ noscript {
     right: .5em;
 }
 
+#btnNewChat, #btnSendMessage{
+    background-color: #1d35bf;
+}
+
+#btnNewChat:hover, #btnSendMessage:hover{
+    background-color: #1a2d9d;
+}
+
+
 /**
 Custom boostrap
  */
 h1, h2, .h1, .h2, a {
-    color: #006cac;
-}
-
-h1 small {
-    color: #6c6c6c;
+    color: #1d35bf;
 }
