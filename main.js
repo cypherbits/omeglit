@@ -95,9 +95,9 @@ function newOmeglit(url, lonely, allClients) {
                 if (lonely.id === socket.id) {
                     lonely = {};
                 }
-                if (allClients[socket.id].partner) {
-                    io.to(allClients[socket.id].partner).emit('disconnect');
-                }
+                // if (allClients[socket.id].partner) {
+                //     io.to(allClients[socket.id].partner).emit('disconnect'); //this throws Error: "disconnect" is a reserved event name
+                // }
 
                 delete allClients[socket.id];
 
